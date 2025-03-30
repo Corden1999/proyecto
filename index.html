@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Página</title>
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .titulo {
+            margin: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .titulo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .botones {
+            text-align: right;
+            margin: 10px;
+            display: inline-block;
+            float: right;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        .menu {
+            background-color: #ae8b4f;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 50px;
+        }
+        
+        .menu button {
+            background-color: #000000;
+            border: 2px solid #000000;
+            color: white;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            min-width: 150px;
+        }
+        
+        .menu button:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .botones button {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            color: #000000;
+            padding: 12px 25px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        
+        .botones button:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        button {
+            padding: 8px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ae8b4f;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            padding: 10px 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content button {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            border-radius: 0;
+            margin: 0;
+            min-width: auto;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #000000;
+            color: white;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quienes-somos {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 15px;
+            margin: 30px auto;
+            padding: 30px;
+            max-width: 800px;
+            color: #ffffff;
+        }
+
+        .quienes-somos h2 {
+            color: #ae8b4f;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .quienes-somos p {
+            line-height: 1.6;
+            font-size: 16px;
+            text-align: justify;
+        }
+
+        .servicios {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px auto;
+            max-width: 1200px;
+            padding: 0 20px;
+            gap: 20px;
+        }
+
+        .servicio-columna {
+            flex: 1;
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 15px;
+            padding: 25px;
+            color: #ffffff;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .servicio-columna:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
+        }
+
+        .servicio-columna h3 {
+            color: #ae8b4f;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .servicio-columna p {
+            line-height: 1.6;
+            font-size: 16px;
+            text-align: justify;
+            margin-bottom: 15px;
+        }
+
+        .servicio-columna ul {
+            text-align: left;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .servicio-columna ul li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .servicio-columna ul li:before {
+            content: "•";
+            color: #ae8b4f;
+            position: absolute;
+            left: 0;
+        }
+
+        .linea-divisoria {
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ae8b4f, transparent);
+            margin: 40px auto;
+            border-radius: 2px;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .carousel-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-item {
+            flex: 0 0 100%;
+            padding: 30px;
+            box-sizing: border-box;
+            background-color: rgba(174, 139, 79, 0.1);
+            border-radius: 10px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .carousel-item h3 {
+            color: #ae8b4f;
+            margin-bottom: 15px;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .carousel-item p {
+            line-height: 1.8;
+            font-size: 16px;
+            text-align: center;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(174, 139, 79, 0.8);
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 24px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 2;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .carousel-button:hover {
+            background-color: rgba(174, 139, 79, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-button.prev {
+            left: 10px;
+        }
+
+        .carousel-button.next {
+            right: 10px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: rgba(174, 139, 79, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot:hover {
+            transform: scale(1.2);
+        }
+
+        .dot.active {
+            background-color: #ae8b4f;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="titulo"><a href="index.html"><img src="img/titulo.png" alt="Junteate Logo"></a></h1>
+        <div class="botones">
+            <button onclick="location.href='./sesiones/iniciosesion.html'">Inicio de Sesión</button>
+            <button onclick="location.href='./sesiones/registro.html'">Registro</button>
+        </div>
+    </div>
+    
+    <nav class="menu">
+        <div class="dropdown">
+            <button onclick="location.href='#vivienda'">Vivienda</button>
+            <div class="dropdown-content">
+                <button onclick="location.href='#pisos'">Pisos</button>
+                <button onclick="location.href='#habitaciones'">Habitaciones</button>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button onclick="location.href='#empleo'">Empleo</button>
+            <div class="dropdown-content">
+                <button onclick="location.href='#contratar'">Contratar</button>
+                <button onclick="location.href='#buscar'">Buscar</button>
+            </div>
+        </div>
+        <button onclick="location.href='#banca'">Banca</button>
+    </nav>
+
+    <div class="quienes-somos">
+        <h2>¿Quiénes Somos?</h2>
+        <p>Junteate es una plataforma innovadora que conecta personas y oportunidades en tres áreas fundamentales: vivienda, empleo y servicios bancarios. Nuestra misión es facilitar el acceso a estas necesidades básicas de manera eficiente y segura.</p>
+        <p>En el sector de vivienda, ofrecemos una amplia gama de opciones de alojamiento, desde pisos completos hasta habitaciones individuales. En el ámbito laboral, conectamos a empleadores con talento, permitiendo tanto la publicación de ofertas de trabajo como la búsqueda activa de empleo. Y en el sector bancario, proporcionamos acceso a servicios financieros esenciales.</p>
+        <p>Nuestro compromiso es crear una comunidad donde las personas puedan encontrar soluciones integrales para sus necesidades básicas, todo en un solo lugar, de manera transparente y confiable.</p>
+    </div>
+
+    <div class="linea-divisoria"></div>
+
+    <div class="servicios">
+        <div class="servicio-columna">
+            <h3>Vivienda</h3>
+            <p>Encuentra el hogar perfecto con nuestra plataforma especializada en vivienda.</p>
+            <ul>
+                <li>Pisos completos</li>
+                <li>Habitaciones individuales</li>
+                <li>Alquiler temporal</li>
+                <li>Viviendas compartidas</li>
+                <li>Asesoramiento personalizado</li>
+            </ul>
+        </div>
+
+        <div class="servicio-columna">
+            <h3>Empleo</h3>
+            <p>Conectamos talento con oportunidades laborales de calidad.</p>
+            <ul>
+                <li>Ofertas de trabajo</li>
+                <li>Búsqueda de empleo</li>
+                <li>Perfiles profesionales</li>
+                <li>Entrevistas programadas</li>
+                <li>Asesoría laboral</li>
+            </ul>
+        </div>
+
+        <div class="servicio-columna">
+            <h3>Banca</h3>
+            <p>Acceso a servicios financieros esenciales de manera sencilla y segura.</p>
+            <ul>
+                <li>Cuentas bancarias</li>
+                <li>Préstamos personales</li>
+                <li>Seguros</li>
+                <li>Inversiones</li>
+                <li>Asesoría financiera</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="linea-divisoria"></div>
+
+    <div class="noticias">
+        <h2>Noticias</h2>
+        <div class="carousel">
+            <div class="carousel-container">
+                <div class="carousel-item">
+                    <h3>Nuevas Oportunidades de Vivienda</h3>
+                    <p>Descubre las últimas ofertas de pisos y habitaciones disponibles en nuestra plataforma. Con precios competitivos y ubicaciones estratégicas, encontrarás el hogar perfecto que se adapte a tus necesidades y presupuesto.</p>
+                </div>
+                <div class="carousel-item">
+                    <h3>Empleo: Tendencias 2024</h3>
+                    <p>Las profesiones más demandadas y las habilidades más valoradas en el mercado laboral actual. Prepárate para el futuro del trabajo con las últimas tendencias y oportunidades laborales que ofrece nuestra plataforma.</p>
+                </div>
+                <div class="carousel-item">
+                    <h3>Servicios Financieros Innovadores</h3>
+                    <p>Conoce las nuevas herramientas y servicios bancarios que facilitan la gestión de tus finanzas personales y empresariales. Accede a soluciones financieras adaptadas a tus necesidades con la máxima seguridad y comodidad.</p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-dots">
+            <span class="dot active" onclick="goToSlide(0)"></span>
+            <span class="dot" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+        </div>
+        <div class="linea-divisoria"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = document.querySelectorAll('.carousel-item').length;
+        const container = document.querySelector('.carousel-container');
+        const dots = document.querySelectorAll('.dot');
+
+        function updateCarousel() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function moveCarousel(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateCarousel();
+        }
+
+        // Auto-play cada 5 segundos
+        setInterval(() => moveCarousel(1), 5000);
+
+        // Inicializar el carrusel
+        updateCarousel();
+    </script>
+</body>
+</html>
