@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Habitaciones - Junteate</title>
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .titulo {
+            margin: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .titulo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .botones {
+            text-align: right;
+            margin: 10px;
+            display: inline-block;
+            float: right;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        .menu {
+            background-color: #ae8b4f;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            padding: 15px 50px;
+        }
+        
+        .menu button {
+            background-color: #000000;
+            border: 2px solid #000000;
+            color: white;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            min-width: 150px;
+        }
+        
+        .menu button:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .botones button {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            color: #000000;
+            padding: 12px 25px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        
+        .botones button:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ae8b4f;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            padding: 10px 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content button {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            border-radius: 0;
+            margin: 0;
+            min-width: auto;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #000000;
+            color: white;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .titulo-seccion {
+            text-align: center;
+            color: #ae8b4f;
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 0;
+            padding: 5px;
+            position: relative;
+            top: -10px;
+        }
+
+        .contenido-habitaciones {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #ffffff;
+        }
+
+        .grid-habitaciones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .habitacion-card {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .habitacion-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
+        }
+
+        .habitacion-card h3 {
+            color: #ae8b4f;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .habitacion-card p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .habitacion-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .habitacion-card ul li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .habitacion-card ul li:before {
+            content: "•";
+            color: #ae8b4f;
+            position: absolute;
+            left: 0;
+        }
+
+        .precio {
+            color: #ae8b4f;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .boton-reservar {
+            background-color: #ae8b4f;
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .boton-reservar:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
+        }
+
+        .descripcion-empresa {
+            background-color: #000000;
+            border: 2px solid #ae8b4f;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.2);
+        }
+
+        .descripcion-empresa h3 {
+            color: #ae8b4f;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .descripcion-empresa p {
+            color: #ffffff;
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .descripcion-empresa p:last-child {
+            margin-bottom: 0;
+        }
+
+        .barra-divisoria {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ae8b4f, transparent);
+            margin: 40px auto;
+            max-width: 800px;
+        }
+
+        .carousel-container {
+            max-width: 800px;
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.2);
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ae8b4f;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="titulo"><a href="../index.html"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
+        <div class="botones">
+            <button onclick="location.href='../sesiones/iniciosesion.html'">Inicio de Sesión</button>
+            <button onclick="location.href='../sesiones/registro.html'">Registro</button>
+        </div>
+    </div>
+
+    <h2 class="titulo-seccion">Habitaciones</h2>
+    
+    <nav class="menu">
+        <button onclick="location.href='#alquilar'">Habitaciones en Alquiler</button>
+    </nav>
+
+    <div class="contenido-habitaciones">
+        <div class="descripcion-empresa">
+            <h3>Lideres en alquiler de habitaciones</h3>
+            <p>Somos una empresa especializada en el alquiler de habitaciones, comprometida con ofrecer las mejores opciones de alojamiento a nuestros clientes. Nuestro objetivo es facilitar el proceso de búsqueda y alquiler de habitaciones, proporcionando un servicio personalizado y de calidad.</p>
+            <p>Contamos con una amplia selección de habitaciones en las mejores ubicaciones, todas ellas verificadas y con las máximas garantías de calidad. Nuestro equipo de profesionales está siempre disponible para asesorar y guiar a nuestros clientes en cada paso del proceso.</p>
+        </div>
+
+        <div class="barra-divisoria"></div>
+
+        <div class="carousel-container">
+            <div class="carousel">
+                <div class="carousel-slide">
+                    <img src="../img/habitacion1.jpg" alt="Habitación 1">
+                </div>
+                <div class="carousel-slide">
+                    <img src="../img/habitacion2.jpg" alt="Habitación 2">
+                </div>
+                <div class="carousel-slide">
+                    <img src="../img/habitacion3.jpg" alt="Habitación 3">
+                </div>
+            </div>
+            <div class="carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const carousel = document.querySelector('.carousel');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        let currentSlide = 0;
+
+        function updateCarousel() {
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateCarousel();
+        }
+
+        // Cambio automático cada 5 segundos
+        setInterval(nextSlide, 5000);
+
+        // Eventos para los dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+    </script>
+</body>
+</html> 

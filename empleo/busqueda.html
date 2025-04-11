@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Empleo - Junteate</title>
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .titulo {
+            margin: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .titulo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .botones {
+            text-align: right;
+            margin: 10px;
+            display: inline-block;
+            float: right;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        .menu {
+            background-color: #ae8b4f;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            padding: 15px 50px;
+        }
+        
+        .menu button {
+            background-color: #000000;
+            border: 2px solid #000000;
+            color: white;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            min-width: 150px;
+        }
+        
+        .menu button:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .botones button {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            color: #000000;
+            padding: 12px 25px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        
+        .botones button:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .titulo-seccion {
+            text-align: center;
+            color: #ae8b4f;
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 0;
+            padding: 5px;
+            position: relative;
+            top: -10px;
+        }
+
+        .contenido-empleo {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #ffffff;
+        }
+
+        .descripcion-empresa {
+            background-color: #000000;
+            border: 2px solid #ae8b4f;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.2);
+        }
+
+        .descripcion-empresa h3 {
+            color: #ae8b4f;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .descripcion-empresa p {
+            color: #ffffff;
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .descripcion-empresa p:last-child {
+            margin-bottom: 0;
+        }
+
+        .barra-divisoria {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ae8b4f, transparent);
+            margin: 40px auto;
+            max-width: 800px;
+        }
+
+        .carousel-container {
+            max-width: 800px;
+            margin: 30px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.2);
+            background-color: #000000;
+            border: 2px solid #ae8b4f;
+            padding: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 500px;
+            position: relative;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            width: 100%;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .oferta-empleo {
+            color: #ffffff;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #000000;
+            border-radius: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .oferta-empleo h4 {
+            color: #ae8b4f;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            border-bottom: 2px solid #ae8b4f;
+            padding-bottom: 10px;
+        }
+
+        .oferta-empleo .empresa {
+            font-size: 22px;
+            margin: 15px 0;
+            color: #ffffff;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .oferta-empleo .descripcion {
+            line-height: 1.8;
+            margin: 20px 0;
+            text-align: justify;
+            flex-grow: 1;
+            padding: 0 20px;
+            overflow-y: auto;
+            max-height: 200px;
+        }
+
+        .oferta-empleo .salario {
+            color: #ae8b4f;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            background-color: rgba(174, 139, 79, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 10px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            background-color: #ae8b4f;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .dot.active {
+            background-color: #ffffff;
+            opacity: 1;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="titulo"><a href="../index.html"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
+        <div class="botones">
+            <button onclick="location.href='../sesiones/iniciosesion.html'">Inicio de Sesión</button>
+            <button onclick="location.href='../sesiones/registro.html'">Registro</button>
+        </div>
+    </div>
+
+    <h2 class="titulo-seccion">Empleo</h2>
+    
+    <nav class="menu">
+        <button onclick="location.href='ofertas.html'">Búsqueda de Empleo</button>
+    </nav>
+
+    <div class="contenido-empleo">
+        <div class="descripcion-empresa">
+            <h3>Tu Futuro Profesional</h3>
+            <p>Somos una plataforma especializada en la búsqueda y oferta de empleo, comprometida con conectar a los mejores talentos con las empresas más destacadas. Nuestro objetivo es facilitar el proceso de búsqueda de empleo, proporcionando herramientas efectivas y un servicio personalizado.</p>
+            <p>Contamos con una amplia red de empresas asociadas y ofertas de empleo en diversos sectores, todas ellas verificadas y con las máximas garantías de calidad. Nuestro equipo de profesionales está siempre disponible para asesorar y guiar a nuestros usuarios en cada paso del proceso de búsqueda de empleo.</p>
+        </div>
+
+        <div class="barra-divisoria"></div>
+
+        <div class="carousel-container">
+            <div class="carousel">
+                <div class="carousel-slide">
+                    <div class="oferta-empleo">
+                        <h4>Desarrollador Web Senior</h4>
+                        <div class="empresa">Tech Solutions S.A.</div>
+                        <div class="descripcion">
+                            Buscamos un desarrollador web senior con experiencia en tecnologías modernas. Responsabilidades incluyen desarrollo de aplicaciones web, mantenimiento de sistemas existentes y colaboración con el equipo de diseño. Se requiere experiencia en JavaScript, React y Node.js.
+                        </div>
+                        <div class="salario">45.000€ - 55.000€/año</div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="oferta-empleo">
+                        <h4>Gerente de Proyectos</h4>
+                        <div class="empresa">Innovación Global</div>
+                        <div class="descripcion">
+                            Oportunidad para liderar proyectos estratégicos en una empresa en crecimiento. El candidato ideal tendrá experiencia en gestión de equipos, planificación de proyectos y comunicación con stakeholders. Se valorará certificación PMP.
+                        </div>
+                        <div class="salario">60.000€ - 70.000€/año</div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="oferta-empleo">
+                        <h4>Especialista en Marketing Digital</h4>
+                        <div class="empresa">Digital Agency</div>
+                        <div class="descripcion">
+                            Buscamos un especialista en marketing digital con experiencia en SEO, SEM y redes sociales. El puesto requiere creatividad, análisis de datos y capacidad para desarrollar estrategias efectivas de marketing online.
+                        </div>
+                        <div class="salario">35.000€ - 45.000€/año</div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const carousel = document.querySelector('.carousel');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        let currentSlide = 0;
+
+        function updateCarousel() {
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateCarousel();
+        }
+
+        // Cambio automático cada 5 segundos
+        setInterval(nextSlide, 5000);
+
+        // Eventos para los dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+    </script>
+</body>
+</html>
