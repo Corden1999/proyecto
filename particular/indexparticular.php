@@ -1,8 +1,11 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inicio de Sesión - Junteate</title>
+    <title>Junteate - Panel Empleado</title>
     <style>
         body {
             background-color: #000000;
@@ -32,7 +35,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 30px 20px;
+            margin-bottom: 40px;
         }
         
         .menu {
@@ -43,6 +47,7 @@
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
+            margin-top: 40px;
         }
         
         .menu button {
@@ -63,6 +68,28 @@
         .menu button:hover {
             background-color: #ffffff;
             color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .botones button {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            color: #000000;
+            padding: 12px 25px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        
+        .botones button:hover {
+            background-color: #000000;
+            color: #ffffff;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
@@ -108,140 +135,93 @@
             box-shadow: none;
         }
 
-        .formulario-login {
+        .welcome-container {
             background-color: #000000;
-            border: 2px solid #ffffff;
+            border: 2px solid #ae8b4f;
             border-radius: 15px;
-            margin: 50px auto;
-            padding: 40px;
-            max-width: 400px;
+            padding: 20px;
+            margin: 20px;
+            color: #ffffff;
+            position: absolute;
+            top: 0px;
+            right: 10px;
+            text-align: right;
+        }
+
+        .welcome-container a {
+            color: #ae8b4f;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .welcome-container a:hover {
             color: #ffffff;
         }
 
-        .formulario-login h2 {
+        .panel-empleado {
+            background-color: #000000;
+            border: 2px solid #ae8b4f;
+            border-radius: 15px;
+            margin: 30px auto;
+            padding: 30px;
+            max-width: 800px;
+            color: #ffffff;
+        }
+
+        .panel-empleado h2 {
             color: #ae8b4f;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-size: 28px;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
-        .campo-formulario {
-            margin-bottom: 20px;
-        }
-
-        .campo-formulario label {
-            display: block;
-            margin-bottom: 8px;
-            color: #ae8b4f;
+        .panel-empleado p {
+            line-height: 1.6;
             font-size: 16px;
-        }
-
-        .campo-formulario input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ae8b4f;
-            border-radius: 8px;
-            background-color: #000000;
-            color: #ffffff;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        .campo-formulario input:focus {
-            outline: none;
-            border-color: #ffffff;
-            box-shadow: 0 0 5px rgba(174, 139, 79, 0.5);
-        }
-
-        .boton-login {
-            background-color: #ae8b4f;
-            color: #ffffff;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .boton-login:hover {
-            background-color: #ffffff;
-            color: #000000;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
-        }
-
-        .botones button {
-            background-color: #ffffff;
-            border: 2px solid #000000;
-            color: #000000;
-            padding: 12px 25px;
-            margin: 0 5px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-        }
-        
-        .botones button:hover {
-            background-color: #000000;
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: justify;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1 class="titulo"><a href="../index.html"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
-        <div class="botones">
-            <button onclick="location.href='iniciosesion.html'">Inicio de Sesión</button>
-            <button onclick="location.href='registro.html'">Registro</button>
-        </div>
     </div>
     
     <nav class="menu">
         <div class="dropdown">
             <button onclick="location.href='#vivienda'">Vivienda</button>
             <div class="dropdown-content">
-                <button onclick="location.href='../vivienda/pisos.html'">Pisos</button>
-                <button onclick="location.href='../vivienda/habitaciones.html'">Habitaciones</button>
-                <button onclick="location.href='../vivienda/locales_comerciales.html'">Locales Comerciales</button>
+                <button onclick="location.href='./vivienda_particular/piso/piso.php'">Pisos</button>
+                <button onclick="location.href='./vivienda_particular/habitacion/habitacion.php'">Habitaciones</button>
             </div>
         </div>
         <div class="dropdown">
             <button onclick="location.href='#empleo'">Empleo</button>
             <div class="dropdown-content">
-                <button onclick="location.href='iniciosesion.html'">Contratar</button>
-                <button onclick="location.href='../empleo/busqueda.html'">Buscar</button>
+                <button onclick="location.href='./empleo_particular/buscar.php'">Buscar Empleo</button>
+                <button onclick="location.href='./empleo_particular/mis_solicitudes.php'">Mis Solicitudes</button>
             </div>
         </div>
         <button onclick="location.href='../banca/banca.html'">Banca</button>
     </nav>
 
-    <div class="formulario-login">
-        <h2>Inicio de Sesión</h2>
-        <form action="check-login.php" method="post" enctype="multipart/form-data">
-            <div class="campo-formulario">
-                <label for="email">Correo Electrónico</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="campo-formulario">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="boton-login">Iniciar Sesión</button>
-        </form>
+    <?php
+    $name = $_SESSION['name'];
+    echo "<div class='welcome-container'>
+        <strong>¡Bienvenido!</strong> $name
+        <a href='../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../sesiones/logout.php'>Cerrar Sesión</a>
+    </div>";
+    ?>
+
+    <div class="panel-empleado">
+        <h2>Panel de Control Empleado</h2>
+        <p>Bienvenido a tu panel de control de empleado. Desde aquí podrás buscar viviendas y empleos, así como gestionar tus solicitudes. Utiliza el menú superior para acceder a todas las funcionalidades disponibles.</p>
     </div>
+
 </body>
-</html>
+</html> 

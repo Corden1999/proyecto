@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Empleo - Junteate</title>
+    <title>Locales Comerciales</title>
     <style>
         body {
             background-color: #000000;
@@ -89,6 +89,47 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ae8b4f;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            padding: 10px 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content button {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            border-radius: 0;
+            margin: 0;
+            min-width: auto;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #000000;
+            color: white;
+            transform: none;
+            box-shadow: none;
+        }
+
         .titulo-seccion {
             text-align: center;
             color: #ae8b4f;
@@ -101,11 +142,93 @@
             top: -10px;
         }
 
-        .contenido-empleo {
+        .contenido-habitaciones {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             color: #ffffff;
+        }
+
+        .grid-habitaciones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .habitacion-card {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .habitacion-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
+        }
+
+        .habitacion-card h3 {
+            color: #ae8b4f;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .habitacion-card p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .habitacion-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .habitacion-card ul li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .habitacion-card ul li:before {
+            content: "•";
+            color: #ae8b4f;
+            position: absolute;
+            left: 0;
+        }
+
+        .precio {
+            color: #ae8b4f;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .boton-reservar {
+            background-color: #ae8b4f;
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .boton-reservar:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
         }
 
         .descripcion-empresa {
@@ -154,129 +277,65 @@
             overflow: hidden;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(174, 139, 79, 0.2);
-            background-color: #000000;
-            border: 2px solid #ae8b4f;
-            padding: 20px;
         }
 
         .carousel {
             display: flex;
             transition: transform 0.5s ease-in-out;
-            height: 500px;
-            position: relative;
         }
 
         .carousel-slide {
             min-width: 100%;
-            width: 100%;
             position: relative;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .oferta-empleo {
-            color: #ffffff;
+        .carousel-slide img {
             width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background-color: #000000;
-            border-radius: 15px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .oferta-empleo h4 {
-            color: #ae8b4f;
-            font-size: 28px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: center;
-            border-bottom: 2px solid #ae8b4f;
-            padding-bottom: 10px;
-        }
-
-        .oferta-empleo .empresa {
-            font-size: 22px;
-            margin: 15px 0;
-            color: #ffffff;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .oferta-empleo .descripcion {
-            line-height: 1.8;
-            margin: 20px 0;
-            text-align: justify;
-            flex-grow: 1;
-            padding: 0 20px;
-            overflow-y: auto;
-            max-height: 200px;
-        }
-
-        .oferta-empleo .salario {
-            color: #ae8b4f;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            background-color: rgba(174, 139, 79, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
+            height: 400px;
+            object-fit: cover;
         }
 
         .carousel-dots {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            padding: 10px 0;
-            position: relative;
-            z-index: 2;
+            gap: 10px;
+            margin-top: 15px;
         }
 
         .dot {
-            width: 15px;
-            height: 15px;
+            width: 12px;
+            height: 12px;
             background-color: #ae8b4f;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.5;
+            transition: background-color 0.3s ease;
         }
 
         .dot.active {
             background-color: #ffffff;
-            opacity: 1;
-            transform: scale(1.2);
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1 class="titulo"><a href="../index.html"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
+        <h1 class="titulo"><a href="../index.html"><img src="../img/titulo.png" alt="Logo"></a></h1>
         <div class="botones">
             <button onclick="location.href='../sesiones/iniciosesion.html'">Inicio de Sesión</button>
             <button onclick="location.href='../sesiones/registro.html'">Registro</button>
         </div>
     </div>
 
-    <h2 class="titulo-seccion">Empleo</h2>
+    <h2 class="titulo-seccion">Locales Comerciales</h2>
     
     <nav class="menu">
-        <button onclick="location.href='../sesiones/iniciosesion.html'">Búsqueda de Empleo</button>
+        <button onclick="location.href='../sesiones/iniciosesion.html'">Locales en Alquiler</button>
     </nav>
 
-    <div class="contenido-empleo">
+    <div class="contenido-habitaciones">
         <div class="descripcion-empresa">
-            <h3>Tu Futuro Profesional</h3>
-            <p>Somos una plataforma especializada en la búsqueda y oferta de empleo, comprometida con conectar a los mejores talentos con las empresas más destacadas. Nuestro objetivo es facilitar el proceso de búsqueda de empleo, proporcionando herramientas efectivas y un servicio personalizado.</p>
-            <p>Contamos con una amplia red de empresas asociadas y ofertas de empleo en diversos sectores, todas ellas verificadas y con las máximas garantías de calidad. Nuestro equipo de profesionales está siempre disponible para asesorar y guiar a nuestros usuarios en cada paso del proceso de búsqueda de empleo.</p>
+            <h3>Los mejores locales comerciales de la ciudad</h3>
+            <p>Somos especialistas en la gestión de locales comerciales, ofreciendo las mejores ubicaciones para tu negocio. Nuestro objetivo es ayudarte a encontrar el espacio perfecto que se adapte a las necesidades de tu empresa, ya sea para compra o alquiler.</p>
+            <p>Disponemos de una amplia variedad de locales en las zonas más estratégicas de la ciudad, con diferentes tamaños y características para todo tipo de actividades comerciales. Nuestro equipo de expertos te asesorará en cada paso del proceso para garantizar la mejor elección.</p>
         </div>
 
         <div class="barra-divisoria"></div>
@@ -284,34 +343,13 @@
         <div class="carousel-container">
             <div class="carousel">
                 <div class="carousel-slide">
-                    <div class="oferta-empleo">
-                        <h4>Desarrollador Web Senior</h4>
-                        <div class="empresa">Tech Solutions S.A.</div>
-                        <div class="descripcion">
-                            Buscamos un desarrollador web senior con experiencia en tecnologías modernas. Responsabilidades incluyen desarrollo de aplicaciones web, mantenimiento de sistemas existentes y colaboración con el equipo de diseño. Se requiere experiencia en JavaScript, React y Node.js.
-                        </div>
-                        <div class="salario">45.000€ - 55.000€/año</div>
-                    </div>
+                    <img src="../img/local1.jpg" alt="Local 1">
                 </div>
                 <div class="carousel-slide">
-                    <div class="oferta-empleo">
-                        <h4>Gerente de Proyectos</h4>
-                        <div class="empresa">Innovación Global</div>
-                        <div class="descripcion">
-                            Oportunidad para liderar proyectos estratégicos en una empresa en crecimiento. El candidato ideal tendrá experiencia en gestión de equipos, planificación de proyectos y comunicación con stakeholders. Se valorará certificación PMP.
-                        </div>
-                        <div class="salario">60.000€ - 70.000€/año</div>
-                    </div>
+                    <img src="../img/local2.jpg" alt="Local 2">
                 </div>
                 <div class="carousel-slide">
-                    <div class="oferta-empleo">
-                        <h4>Especialista en Marketing Digital</h4>
-                        <div class="empresa">Digital Agency</div>
-                        <div class="descripcion">
-                            Buscamos un especialista en marketing digital con experiencia en SEO, SEM y redes sociales. El puesto requiere creatividad, análisis de datos y capacidad para desarrollar estrategias efectivas de marketing online.
-                        </div>
-                        <div class="salario">35.000€ - 45.000€/año</div>
-                    </div>
+                    <img src="../img/local3.jpg" alt="Local 3">
                 </div>
             </div>
             <div class="carousel-dots">

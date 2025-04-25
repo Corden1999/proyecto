@@ -30,14 +30,14 @@
 	
 
       if ($_SESSION['tipo'] == 'empresa') {
-        header("Location: ../empresa/indexempresa.html");
-      } else {
-        header("Location: ../particular/indexparticular.html");
+        header("Location: ../empresa/indexempresa.php");
+      } else if ($_SESSION['tipo'] == 'particular') {
+        header("Location: ../particular/indexparticular.php");           
       }
 	
 	} else {
 		echo "<div class='center-container'>
-                <h3>Email o Contraseña incorrectos!</h3>
+                <h3>¡Email o Contraseña incorrectos!</h3>
                 <a href='iniciosesion.html' class='login-button'>Intentar de nuevo</a>
               </div>";			
 	}	
