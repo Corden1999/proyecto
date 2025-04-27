@@ -5,7 +5,7 @@ session_start();
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Junteate - Buscar Mis Pisos</title>
+    <title>Junteate - Buscar Habitaciones</title>
     <style>
         body {
             background-color: #000000;
@@ -140,130 +140,114 @@ session_start();
             color: #ffffff;
         }
 
-        .form-container {
+        .habitaciones-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 40px 20px;
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .habitacion-card {
             background-color: #000000;
             border: 2px solid #ae8b4f;
             border-radius: 15px;
-            margin: 30px auto;
-            padding: 30px;
-            max-width: 800px;
+            padding: 20px;
+            width: 100%;
             color: #ffffff;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
-        .form-container h2 {
+        .habitacion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
+        }
+
+        .habitacion-imagen {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .habitacion-titulo {
             color: #ae8b4f;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #ae8b4f;
+            font-size: 24px;
+            margin-bottom: 15px;
             font-weight: bold;
         }
 
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ae8b4f;
-            border-radius: 5px;
-            background-color: #000000;
-            color: #ffffff;
+        .habitacion-info {
+            margin-bottom: 10px;
             font-size: 16px;
+            line-height: 1.5;
         }
 
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
+        .habitacion-propietario {
+            color: #ae8b4f;
+            font-size: 16px;
+            margin: 10px 0;
+            font-weight: bold;
         }
 
-        .form-group input[type="submit"] {
-            background-color: #ae8b4f;
+        .habitacion-precio {
+            color: #ae8b4f;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .alquilar-button {
+            background-color: #4CAF50;
             color: #000000;
             border: none;
-            padding: 12px 25px;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 15px;
             cursor: pointer;
-            font-size: 16px;
-            border-radius: 25px;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             font-weight: bold;
-            width: auto;
-            margin-top: 20px;
         }
 
-        .form-group input[type="submit"]:hover {
-            background-color: #ffffff;
-            color: #000000;
+        .alquilar-button:hover {
+            background-color: #45a049;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .pisos-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+        .no-fondos {
+            color: #ff4444;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: bold;
         }
 
-        .piso-card {
-            background-color: #000000;
-            border: 2px solid #ae8b4f;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px;
-            width: calc(33.33% - 20px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .piso-imagen {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .piso-titulo {
+        .no-habitaciones {
+            text-align: center;
             color: #ae8b4f;
             font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
+            margin-top: 40px;
+            padding: 20px;
         }
 
-        .piso-info {
-            color: #ffffff;
+        .en-propiedad {
+            background-color: #0066cc;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
             font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .piso-precio {
-            color: #ae8b4f;
-            font-size: 16px;
+            margin: 15px 0;
             font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .piso-tipo {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: normal;
-        }
-
-        .no-pisos {
-            color: #ffffff;
-            font-size: 16px;
             text-align: center;
-            margin: 20px;
+            width: fit-content;
         }
     </style>
 </head>
@@ -277,6 +261,7 @@ session_start();
             <button onclick="location.href='alquilarhabitacion.php'">Alquilar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='buscaralquilarhabitacion.php'">buscar habitaciones en alquiler</button>
+                <button onclick="location.href='habitacionesalquiladas.php'">habitaciones alquiladas</button>
             </div>
         </div>
         <div class="dropdown">
@@ -289,7 +274,6 @@ session_start();
             </div>
         </div>
     </nav>
-
 
     <?php
     $name = $_SESSION['name'];
@@ -308,7 +292,6 @@ session_start();
      $localidad = $_POST['localidad'];
      $provincia = $_POST['provincia'];
      $precio = $_POST['precio'];
-     
 
      $sql = "SELECT * FROM habitaciones WHERE (direccion = '$direccion' OR localidad = '$localidad' OR provincia = '$provincia' OR precio = '$precio') AND disponible = 'si'";
      $resultado = mysqli_query($conexion, $sql)
@@ -316,28 +299,52 @@ session_start();
 
         $nfilas = mysqli_num_rows($resultado);
         if ($nfilas > 0) {
-            echo "<div class='pisos-container'>";
+            echo "<div class='habitaciones-container'>";
             for ($i=0; $i<$nfilas; $i++) {
                 $fila = mysqli_fetch_array($resultado);
-                echo "<div class='piso-card'>";
-                echo "<img src='../../../" . str_replace('../../', '', $fila['foto']) . "' alt='Foto del piso' class='piso-imagen'>";
-                echo "<div class='piso-titulo'>" . $fila['direccion'] . "</div>";
-                echo "<div class='piso-info'>" . $fila['localidad'] . ", " . $fila['provincia'] . "</div>";
-                echo "<div class='piso-info'>Código Postal: " . $fila['codigo_postal'] . "</div>";
-                echo "<div class='piso-info'>" . $fila['descripcion'] . "</div>";
-                echo "<div class='piso-precio'>" . $fila['precio'] . "€</div>";
+                echo "<div class='habitacion-card'>";
+                echo "<img src='../../../" . str_replace('../../', '', $fila['foto']) . "' alt='Foto de la habitación' class='habitacion-imagen'>";
+                echo "<div class='habitacion-titulo'>" . $fila['direccion'] . "</div>";
+                echo "<div class='habitacion-info'>" . $fila['localidad'] . ", " . $fila['provincia'] . "</div>";
+                echo "<div class='habitacion-info'>Código Postal: " . $fila['codigo_postal'] . "</div>";
+                echo "<div class='habitacion-info'>" . $fila['descripcion'] . "</div>";
+                
+                // Obtener información del propietario
+                $sql_propietario = "SELECT nombre FROM Usuarios WHERE id_usuario = " . $fila['id_usuario'];
+                $result_propietario = mysqli_query($conexion, $sql_propietario);
+                $propietario = mysqli_fetch_assoc($result_propietario);
+                
+                echo "<div class='habitacion-propietario'>Propietario: " . $propietario['nombre'] . "</div>";
+                echo "<div class='habitacion-precio'>" . $fila['precio'] . "€/mes</div>";
+                
+                // Verificar si la habitación es del usuario actual
+                if ($fila['id_usuario'] == $_SESSION['id_usuario']) {
+                    echo "<div class='en-propiedad'>En Propiedad</div>";
+                } else {
+                    // Verificar fondos del usuario
+                    $sql_cuenta = "SELECT saldo FROM Cuenta WHERE id_usuario = " . $_SESSION['id_usuario'];
+                    $result_cuenta = mysqli_query($conexion, $sql_cuenta);
+                    $cuenta = mysqli_fetch_assoc($result_cuenta);
+                    
+                    if ($cuenta && $cuenta['saldo'] >= $fila['precio']) {
+                        echo "<form action='procesaralquilerhabitacion.php' method='POST'>";
+                        echo "<input type='hidden' name='id_habitacion' value='" . $fila['id_habitacion'] . "'>";
+                        echo "<input type='hidden' name='precio' value='" . $fila['precio'] . "'>";
+                        echo "<button type='submit' class='alquilar-button'>Alquilar Habitación</button>";
+                        echo "</form>";
+                    } else {
+                        echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
+                    }
+                }
+                
                 echo "</div>";
             }
             echo "</div>";
         } else {
-            echo "<div class='no-pisos'>No hay habitaciones que coincidan con los criterios de búsqueda</div>";
+            echo "<div class='no-habitaciones'>No hay habitaciones que coincidan con los criterios de búsqueda</div>";
         }
         
-  
-     
-    mysqli_close($conexion);
+        mysqli_close($conexion);
     ?>
-
-    
 </body>
 </html>

@@ -261,7 +261,8 @@ session_start();
                 <button onclick="location.href='alquilarpiso.php'">pisos en alquiler</button>
                 <button onclick="location.href='buscarcomprarpiso.php'">buscar pisos en venta</button>
                 <button onclick="location.href='buscaralquilarpiso.php'">buscar pisos en alquiler</button>
-            </div>
+                <button onclick="location.href='pisosalquilados.php'">pisos alquilados</button>
+            </div>  
         </div>
         <div class="dropdown">
             <button onclick="location.href='arrendarpiso.php'">Arrendar / vender piso</button>
@@ -298,8 +299,9 @@ session_start();
     $descripcion = $_POST['descripcion'];
     $precio = $_POST['precio'];
     $tipo = $_POST['tipo'];
+    $disponible = $_POST['disponible'];
 
-    $sql = "UPDATE Pisos SET direccion = '$direccion', localidad = '$localidad', provincia = '$provincia', codigo_postal = '$codigo_postal', descripcion = '$descripcion', precio = '$precio', tipo = '$tipo' WHERE id_piso = '$id_piso'";
+    $sql = "UPDATE Pisos SET direccion = '$direccion', localidad = '$localidad', provincia = '$provincia', codigo_postal = '$codigo_postal', descripcion = '$descripcion', precio = '$precio', tipo = '$tipo', disponible = '$disponible' WHERE id_piso = '$id_piso'";
 
 
     if (mysqli_query($conn, $sql)) {

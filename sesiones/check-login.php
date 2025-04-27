@@ -36,10 +36,7 @@
       }
 	
 	} else {
-		echo "<div class='center-container'>
-                <h3>¡Email o Contraseña incorrectos!</h3>
-                <a href='iniciosesion.html' class='login-button'>Intentar de nuevo</a>
-              </div>";			
+		header("Location: error-login.html");
 	}	
 	mysqli_close($conn);
 ?>

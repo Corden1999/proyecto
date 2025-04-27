@@ -13,19 +13,23 @@ $name = $_SESSION['name'];
 $conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
     or die("No se puede conectar con el servidor");
 
-// Enviar consulta
-$instruccion = "SELECT * FROM Locales WHERE id_usuario = " . $_SESSION['id_usuario'];
-$consulta = mysqli_query($conexion, $instruccion)
-    or die("Fallo en la consulta");
+// Obtener los pisos alquilados por el usuario
+$sql = "SELECT DISTINCT p.*, tpa.fecha_transaccion 
+        FROM Pisos p 
+        JOIN Transaccion_piso_alquiler tpa ON p.id_piso = tpa.id_piso 
+        WHERE tpa.id_usuario_arrendatario = " . $_SESSION['id_usuario'] . " 
+        AND p.disponible = 'no'
+        GROUP BY p.id_piso
+        ORDER BY tpa.fecha_transaccion DESC";
+$resultado = mysqli_query($conexion, $sql)
+    or die("Error al ejecutar la consulta");
 
-// Mostrar resultados de la consulta
-$nfilas = mysqli_num_rows($consulta);
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Junteate - Mis Locales</title>
+    <title>Junteate - Mis Pisos Alquilados</title>
     <style>
         body {
             background-color: #000000;
@@ -84,47 +88,6 @@ $nfilas = mysqli_num_rows($consulta);
             color: #000000;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #ae8b4f;
-            min-width: 160px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 10px;
-            padding: 10px 0;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown-content button {
-            color: white;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            width: 100%;
-            text-align: left;
-            background: none;
-            border: none;
-            border-radius: 0;
-            margin: 0;
-            min-width: auto;
-        }
-
-        .dropdown-content button:hover {
-            background-color: #000000;
-            color: white;
-            transform: none;
-            box-shadow: none;
         }
 
         .welcome-container {
@@ -210,6 +173,13 @@ $nfilas = mysqli_num_rows($consulta);
             line-height: 1.5;
         }
 
+        .piso-propietario {
+            color: #ae8b4f;
+            font-size: 16px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
         .piso-precio {
             color: #ae8b4f;
             font-size: 22px;
@@ -230,30 +200,23 @@ $nfilas = mysqli_num_rows($consulta);
             width: fit-content;
         }
 
-        .piso-disponible {
-            display: block;
-            padding: 8px 15px;
-            background-color: #4CAF50;
-            color: #000000;
-            border-radius: 15px;
-            font-size: 14px;
-            margin: 15px 0 0;
-            font-weight: bold;
-            text-align: left;
-            width: fit-content;
-        }
-
-        .piso-no-disponible {
-            display: block;
-            padding: 8px 15px;
+        .anular-button {
             background-color: #ff4444;
             color: #000000;
+            border: none;
+            padding: 10px 20px;
             border-radius: 15px;
             font-size: 14px;
-            margin: 15px 0 0;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-weight: bold;
-            text-align: left;
-            width: fit-content;
+        }
+
+        .anular-button:hover {
+            background-color: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .no-pisos {
@@ -263,31 +226,79 @@ $nfilas = mysqli_num_rows($consulta);
             margin-top: 40px;
             padding: 20px;
         }
+
+        .fecha-alquiler {
+            color: #ae8b4f;
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ae8b4f;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            padding: 10px 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content button {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            border-radius: 0;
+            margin: 0;
+            min-width: auto;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #000000;
+            color: white;
+            transform: none;
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
 <div class="header">
-        <h1 class="titulo"><a href="../../indexempresa.php"><img src="../../../img/titulo.png" alt="Junteate Logo"></a></h1>
+        <h1 class="titulo"><a href="../../indexparticular.php"><img src="../../../img/titulo.png" alt="Junteate Logo"></a></h1>
     </div>
     
     <nav class="menu">
         <div class="dropdown">
-            <button onclick="location.href='alquilarlocal.php'">Alquilar / comprar local</button>
+            <button onclick="location.href='alquilarpiso.php'">Alquilar / comprar piso</button>
             <div class="dropdown-content">
-                <button onclick="location.href='comprarlocal.php'">locales en venta</button>
-                <button onclick="location.href='alquilarlocal.php'">locales en alquiler</button>
-                <button onclick="location.href='buscarcomprarlocal.php'">buscar locales en venta</button>
-                <button onclick="location.href='buscaralquilarlocal.php'">buscar locales en alquiler</button>
-                <button onclick="location.href='localesalquilados.php'">locales alquilados</button>
-            </div>  
+                <button onclick="location.href='comprarpiso.php'">pisos en venta</button>
+                <button onclick="location.href='alquilarpiso.php'">pisos en alquiler</button>
+                <button onclick="location.href='buscarcomprarpiso.php'">buscar pisos en venta</button>
+                <button onclick="location.href='buscaralquilarpiso.php'">buscar pisos en alquiler</button>
+                <button onclick="location.href='pisosalquilados.php'">pisos alquilados</button>
+            </div>
         </div>
         <div class="dropdown">
-            <button onclick="location.href='arrendarlocal.php'">Arrendar / venderlocal</button>
+            <button onclick="location.href='arrendarpiso.php'">Arrendar / vender piso</button>
             <div class="dropdown-content">
-                <button onclick="location.href='mislocales.php'">mis locales</button>
-                <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>
-                <button onclick="location.href='editarmislocales.php'">editar mis locales</button>
-                <button onclick="location.href='buscarmislocales.php'">buscar mis locales</button>
+                <button onclick="location.href='mispisos.php'">mis pisos</button>
+                <button onclick="location.href='borrarmispisos.php'">borrar mis pisos</button>
+                <button onclick="location.href='editarmispisos.php'">editar mis pisos</button>
+                <button onclick="location.href='buscarmispisos.php'">buscar mis pisos</button>
             </div>
         </div>
     </nav>
@@ -300,31 +311,39 @@ $nfilas = mysqli_num_rows($consulta);
 
     <div class="pisos-container">
         <?php
+        $nfilas = mysqli_num_rows($resultado);
         if ($nfilas > 0) {
-            for ($i=0; $i<$nfilas; $i++) {
-                $resultado = mysqli_fetch_array($consulta);
+            while ($fila = mysqli_fetch_array($resultado)) {
                 echo "<div class='piso-card'>";
-                echo "<img src='../../../" . str_replace('../../', '', $resultado['foto']) . "' alt='Foto del piso' class='piso-imagen'>";
-                echo "<div class='piso-titulo'>" . $resultado['direccion'] . "</div>";
-                echo "<div class='piso-info'>" . $resultado['localidad'] . ", " . $resultado['provincia'] . "</div>";
-                echo "<div class='piso-info'>Código Postal: " . $resultado['codigo_postal'] . "</div>";
-                echo "<div class='piso-info'>" . $resultado['descripcion'] . "</div>";
-                echo "<div class='piso-precio'>" . $resultado['precio'] . "€</div>";
-                echo "<div class='piso-tipo'>" . ucfirst($resultado['tipo']) . "</div>";
-                if ($resultado['disponible'] == 'si') {
-                    echo "<div class='piso-disponible'>Disponible</div>";
-                } else {
-                    echo "<div class='piso-no-disponible'>No disponible</div>";
-                }
+                echo "<img src='../../../" . str_replace('../../', '', $fila['foto']) . "' alt='Foto del piso' class='piso-imagen'>";
+                echo "<div class='piso-titulo'>" . $fila['direccion'] . "</div>";
+                echo "<div class='piso-info'>" . $fila['localidad'] . ", " . $fila['provincia'] . "</div>";
+                echo "<div class='piso-info'>Código Postal: " . $fila['codigo_postal'] . "</div>";
+                echo "<div class='piso-info'>" . $fila['descripcion'] . "</div>";
+                
+                // Obtener información del propietario
+                $sql_propietario = "SELECT nombre FROM Usuarios WHERE id_usuario = " . $fila['id_usuario'];
+                $result_propietario = mysqli_query($conexion, $sql_propietario);
+                $propietario = mysqli_fetch_assoc($result_propietario);
+                
+                echo "<div class='piso-propietario'>Propietario: " . $propietario['nombre'] . "</div>";
+                echo "<div class='piso-precio'>" . $fila['precio'] . "€/mes</div>";
+                echo "<div class='piso-tipo'>" . ucfirst($fila['tipo']) . "</div>";
+                echo "<div class='fecha-alquiler'>Alquilado el: " . date('d/m/Y', strtotime($fila['fecha_transaccion'])) . "</div>";
+                
+                echo "<form action='procesaranularalquilerpiso.php' method='POST'>";
+                echo "<input type='hidden' name='id_piso' value='" . $fila['id_piso'] . "'>";
+                echo "<button type='submit' class='anular-button'>Anular Alquiler</button>";
+                echo "</form>";
+                
                 echo "</div>";
             }
         } else {
-            echo "<div class='no-pisos'>No hay locales disponibles</div>";
+            echo "<div class='no-pisos'>No tienes pisos alquilados</div>";
         }
 
-        // Cerrar conexión
         mysqli_close($conexion);
         ?>
     </div>
 </body>
-</html>
+</html> 

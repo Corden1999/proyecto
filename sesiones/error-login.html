@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Error de Inicio de Sesión - Junteate</title>
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica', Arial, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            margin-bottom: 40px;
+        }
+        
+        .titulo {
+            margin: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .titulo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .error-container {
+            background-color: #000000;
+            border: 2px solid #ae8b4f;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            margin: 0 auto;
+        }
+        
+        .error-title {
+            color: #ae8b4f;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .retry-button {
+            background-color: #ae8b4f;
+            color: #000000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .retry-button:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="titulo"><a href="../index.html"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
+    </div>
+
+    <div class="error-container">
+        <h1 class="error-title">Error de Inicio de Sesión</h1>
+        <p class="error-message">El email o la contraseña son incorrectos. Por favor, verifica tus credenciales e intenta nuevamente.</p>
+        <a href="iniciosesion.html" class="retry-button">Volver a Intentar</a>
+    </div>
+</body>
+</html> 

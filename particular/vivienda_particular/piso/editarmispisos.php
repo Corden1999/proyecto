@@ -251,6 +251,7 @@ session_start();
                 <button onclick="location.href='alquilarpiso.php'">pisos en alquiler</button>
                 <button onclick="location.href='buscarcomprarpiso.php'">buscar pisos en venta</button>
                 <button onclick="location.href='buscaralquilarpiso.php'">buscar pisos en alquiler</button>
+                <button onclick="location.href='pisosalquilados.php'">pisos alquilados</button>
             </div>
         </div>
         <div class="dropdown">

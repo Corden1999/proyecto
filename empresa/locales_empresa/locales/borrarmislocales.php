@@ -289,10 +289,11 @@ $nfilas = mysqli_num_rows($consulta);
                 <button onclick="location.href='alquilarlocal.php'">locales en alquiler</button>
                 <button onclick="location.href='buscarcomprarlocal.php'">buscar locales en venta</button>
                 <button onclick="location.href='buscaralquilarlocal.php'">buscar locales en alquiler</button>
+                <button onclick="location.href='localesalquilados.php'">locales alquilados</button>
             </div>
         </div>
         <div class="dropdown">
-            <button onclick="location.href='arrendarlocal.php'">Arrendar / venderlocal</button>
+            <button onclick="location.href='arrendarlocal.php'">Arrendar / vender local</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mislocales.php'">mis locales</button>
                 <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>

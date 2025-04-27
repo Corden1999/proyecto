@@ -270,6 +270,19 @@ $nfilas = mysqli_num_rows($consulta);
             margin-top: 40px;
             padding: 20px;
         }
+
+        .en-propiedad {
+            display: block;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: #ffffff;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 15px 0 0;
+            font-weight: bold;
+            text-align: left;
+            width: fit-content;
+        }
     </style>
 </head>
 <body>
@@ -285,6 +298,7 @@ $nfilas = mysqli_num_rows($consulta);
                 <button onclick="location.href='alquilarlocal.php'">locales en alquiler</button>
                 <button onclick="location.href='buscarcomprarlocal.php'">buscar locales en venta</button>
                 <button onclick="location.href='buscaralquilarlocal.php'">buscar locales en alquiler</button>
+                <button onclick="location.href='localesalquilados.php'">locales alquilados</button>
             </div>
         </div>
         <div class="dropdown">
@@ -325,19 +339,24 @@ $nfilas = mysqli_num_rows($consulta);
                 echo "<div class='piso-precio'>" . $resultado['precio'] . "€</div>";
                 echo "<div class='piso-tipo'>" . ucfirst($resultado['tipo']) . "</div>";
                 
-                // Verificar fondos del usuario
-                $sql_cuenta = "SELECT saldo FROM Cuenta WHERE id_usuario = " . $_SESSION['id_usuario'];
-                $result_cuenta = mysqli_query($conexion, $sql_cuenta);
-                $cuenta = mysqli_fetch_assoc($result_cuenta);
-                
-                if ($cuenta && $cuenta['saldo'] >= $resultado['precio']) {
-                    echo "<form action='procesaralquiler.php' method='POST'>";
-                    echo "<input type='hidden' name='id_local' value='" . $resultado['id_local'] . "'>";
-                    echo "<input type='hidden' name='precio' value='" . $resultado['precio'] . "'>";
-                    echo "<button type='submit' class='alquilar-button'>Alquilar Local</button>";
-                    echo "</form>";
+                // Verificar si el local pertenece al usuario actual
+                if ($resultado['id_usuario'] == $_SESSION['id_usuario']) {
+                    echo "<div class='en-propiedad'>En propiedad</div>";
                 } else {
-                    echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
+                    // Verificar fondos del usuario
+                    $sql_cuenta = "SELECT saldo FROM Cuenta WHERE id_usuario = " . $_SESSION['id_usuario'];
+                    $result_cuenta = mysqli_query($conexion, $sql_cuenta);
+                    $cuenta = mysqli_fetch_assoc($result_cuenta);
+                    
+                    if ($cuenta && $cuenta['saldo'] >= $resultado['precio']) {
+                        echo "<form action='procesaralquiler.php' method='POST'>";
+                        echo "<input type='hidden' name='id_local' value='" . $resultado['id_local'] . "'>";
+                        echo "<input type='hidden' name='precio' value='" . $resultado['precio'] . "'>";
+                        echo "<button type='submit' class='alquilar-button'>Alquilar Local</button>";
+                        echo "</form>";
+                    } else {
+                        echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
+                    }
                 }
                 
                 echo "</div>";

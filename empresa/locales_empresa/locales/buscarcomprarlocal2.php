@@ -212,58 +212,138 @@ session_start();
 
         .pisos-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 40px 20px;
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .piso-card {
             background-color: #000000;
             border: 2px solid #ae8b4f;
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 20px;
-            margin: 10px;
-            width: calc(33.33% - 20px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 100%;
+            color: #ffffff;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .piso-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
         }
 
         .piso-imagen {
             width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
 
         .piso-titulo {
             color: #ae8b4f;
-            font-size: 18px;
+            font-size: 24px;
+            margin-bottom: 15px;
             font-weight: bold;
-            margin-bottom: 5px;
         }
 
         .piso-info {
-            color: #ffffff;
-            font-size: 14px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
         }
 
         .piso-precio {
             color: #ae8b4f;
-            font-size: 16px;
+            font-size: 22px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .piso-tipo {
-            color: #ffffff;
+            display: block;
+            padding: 8px 15px;
+            background-color: #ae8b4f;
+            color: #000000;
+            border-radius: 15px;
             font-size: 14px;
-            font-weight: normal;
+            margin: 15px 0 0;
+            font-weight: bold;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .piso-disponible {
+            display: block;
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: #000000;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 15px 0 0;
+            font-weight: bold;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .piso-no-disponible {
+            display: block;
+            padding: 8px 15px;
+            background-color: #ff4444;
+            color: #000000;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 15px 0 0;
+            font-weight: bold;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .comprar-button {
+            background-color: #4CAF50;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .comprar-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .no-fondos {
+            color: #ff4444;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: bold;
         }
 
         .no-pisos {
-            color: #ffffff;
-            font-size: 16px;
             text-align: center;
-            margin: 20px;
+            color: #ae8b4f;
+            font-size: 18px;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        .piso-propietario {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -322,13 +402,35 @@ session_start();
             for ($i=0; $i<$nfilas; $i++) {
                 $fila = mysqli_fetch_array($resultado);
                 echo "<div class='piso-card'>";
-                echo "<img src='../../../" . str_replace('../../', '', $fila['foto']) . "' alt='Foto del piso' class='piso-imagen'>";
+                echo "<img src='../../../" . str_replace('../../', '', $fila['foto']) . "' alt='Foto del local' class='piso-imagen'>";
                 echo "<div class='piso-titulo'>" . $fila['direccion'] . "</div>";
                 echo "<div class='piso-info'>" . $fila['localidad'] . ", " . $fila['provincia'] . "</div>";
                 echo "<div class='piso-info'>Código Postal: " . $fila['codigo_postal'] . "</div>";
                 echo "<div class='piso-info'>" . $fila['descripcion'] . "</div>";
+                
+                // Obtener información del propietario
+                $sql_propietario = "SELECT nombre FROM Usuarios WHERE id_usuario = " . $fila['id_usuario'];
+                $result_propietario = mysqli_query($conexion, $sql_propietario);
+                $propietario = mysqli_fetch_assoc($result_propietario);
+                
+                echo "<div class='piso-propietario' style='color: #ae8b4f;'>Propietario: " . $propietario['nombre'] . "</div>";
                 echo "<div class='piso-precio'>" . $fila['precio'] . "€</div>";
                 echo "<div class='piso-tipo'>" . ucfirst($fila['tipo']) . "</div>";
+                
+                // Verificar fondos del usuario
+                $sql_cuenta = "SELECT saldo FROM Cuenta WHERE id_usuario = " . $_SESSION['id_usuario'];
+                $result_cuenta = mysqli_query($conexion, $sql_cuenta);
+                $cuenta = mysqli_fetch_assoc($result_cuenta);
+                
+                if ($cuenta && $cuenta['saldo'] >= $fila['precio']) {
+                    echo "<form action='procesarcomprarlocal.php' method='POST'>";
+                    echo "<input type='hidden' name='id_local' value='" . $fila['id_local'] . "'>";
+                    echo "<input type='hidden' name='precio' value='" . $fila['precio'] . "'>";
+                    echo "<button type='submit' class='comprar-button'>Comprar Local</button>";
+                    echo "</form>";
+                } else {
+                    echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
+                }
                 echo "</div>";
             }
             echo "</div>";

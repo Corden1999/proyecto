@@ -209,7 +209,7 @@ session_start();
     $name = $_SESSION['name'];
     echo "<div class='welcome-container'>
         <strong>¡Bienvenido!</strong> $name
-        <a href='edit-profile.php'>Editar Perfil</a>
+        <a href='../sesiones/edit-profile.php'>Editar Perfil</a>
         <a href='../sesiones/logout.php'>Cerrar Sesión</a>
     </div>";
     ?>

@@ -297,9 +297,10 @@ session_start();
      $codigo_postal = $_POST['codigo_postal'];
      $descripcion = $_POST['descripcion'];
      $precio = $_POST['precio'];
+     $disponible = $_POST['disponible'];
      $tipo = $_POST['tipo'];
  
-     $sql = "UPDATE Locales SET direccion = '$direccion', localidad = '$localidad', provincia = '$provincia', codigo_postal = '$codigo_postal', descripcion = '$descripcion', precio = '$precio', tipo = '$tipo' WHERE id_local = '$id_local'";
+     $sql = "UPDATE Locales SET direccion = '$direccion', localidad = '$localidad', provincia = '$provincia', codigo_postal = '$codigo_postal', descripcion = '$descripcion', precio = '$precio', tipo = '$tipo', disponible = '$disponible' WHERE id_local = '$id_local'";
         
     if (mysqli_query($conn, $sql)) {
         echo "<div class='result-container'>

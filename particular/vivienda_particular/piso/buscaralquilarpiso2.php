@@ -320,6 +320,18 @@ session_start();
             margin-top: 40px;
             padding: 20px;
         }
+
+        .en-propiedad {
+            background-color: #0066cc;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            width: fit-content;
+        }
     </style>
 </head>
 <body>
@@ -335,6 +347,7 @@ session_start();
                 <button onclick="location.href='alquilarpiso.php'">pisos en alquiler</button>
                 <button onclick="location.href='buscarcomprarpiso.php'">buscar pisos en venta</button>
                 <button onclick="location.href='buscaralquilarpiso.php'">buscar pisos en alquiler</button>
+                <button onclick="location.href='pisosalquilados.php'">pisos alquilados</button>
             </div>
         </div>
         <div class="dropdown">
@@ -392,19 +405,24 @@ session_start();
                 echo "<div class='piso-precio'>" . $fila['precio'] . "€/mes</div>";
                 echo "<div class='piso-tipo'>" . ucfirst($fila['tipo']) . "</div>";
                 
-                // Verificar fondos del usuario
-                $sql_cuenta = "SELECT saldo FROM Cuenta WHERE id_usuario = " . $_SESSION['id_usuario'];
-                $result_cuenta = mysqli_query($conexion, $sql_cuenta);
-                $cuenta = mysqli_fetch_assoc($result_cuenta);
-                
-                if ($cuenta && $cuenta['saldo'] >= $fila['precio']) {
-                    echo "<form action='procesaralquilerpiso.php' method='POST'>";
-                    echo "<input type='hidden' name='id_piso' value='" . $fila['id_piso'] . "'>";
-                    echo "<input type='hidden' name='precio' value='" . $fila['precio'] . "'>";
-                    echo "<button type='submit' class='alquilar-button'>Alquilar Piso</button>";
-                    echo "</form>";
+                // Verificar si el piso es del usuario actual
+                if ($fila['id_usuario'] == $_SESSION['id_usuario']) {
+                    echo "<div class='en-propiedad'>En Propiedad</div>";
                 } else {
-                    echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
+                    // Verificar fondos del usuario
+                    $sql_cuenta = "SELECT saldo FROM Cuenta WHERE id_usuario = " . $_SESSION['id_usuario'];
+                    $result_cuenta = mysqli_query($conexion, $sql_cuenta);
+                    $cuenta = mysqli_fetch_assoc($result_cuenta);
+                    
+                    if ($cuenta && $cuenta['saldo'] >= $fila['precio']) {
+                        echo "<form action='procesaralquilerpiso.php' method='POST'>";
+                        echo "<input type='hidden' name='id_piso' value='" . $fila['id_piso'] . "'>";
+                        echo "<input type='hidden' name='precio' value='" . $fila['precio'] . "'>";
+                        echo "<button type='submit' class='alquilar-button'>Alquilar Piso</button>";
+                        echo "</form>";
+                    } else {
+                        echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
+                    }
                 }
                 
                 echo "</div>";

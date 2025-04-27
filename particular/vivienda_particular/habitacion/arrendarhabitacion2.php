@@ -274,6 +274,7 @@ mysqli_close($conexion);
             <button onclick="location.href='alquilarhabitacion.php'">Alquilar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='buscaralquilarhabitacion.php'">buscar habitaciones en alquiler</button>
+                <button onclick="location.href='habitacionesalquiladas.php'">habitaciones alquiladas</button>
             </div>
         </div>
         <div class="dropdown">

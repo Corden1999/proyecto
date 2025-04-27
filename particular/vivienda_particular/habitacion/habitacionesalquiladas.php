@@ -13,19 +13,23 @@ $name = $_SESSION['name'];
 $conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
     or die("No se puede conectar con el servidor");
 
-// Enviar consulta
-$instruccion = "SELECT * FROM Habitaciones WHERE id_usuario = " . $_SESSION['id_usuario'];
-$consulta = mysqli_query($conexion, $instruccion)
-    or die("Fallo en la consulta");
+// Obtener las habitaciones alquiladas por el usuario
+$sql = "SELECT DISTINCT h.*, tha.fecha_transaccion 
+        FROM Habitaciones h 
+        JOIN Transaccion_habitacion_alquiler tha ON h.id_habitacion = tha.id_habitacion 
+        WHERE tha.id_usuario_habitacion_arrendatario = " . $_SESSION['id_usuario'] . " 
+        AND h.disponible = 'no'
+        GROUP BY h.id_habitacion
+        ORDER BY tha.fecha_transaccion DESC";
+$resultado = mysqli_query($conexion, $sql)
+    or die("Error al ejecutar la consulta");
 
-// Mostrar resultados de la consulta
-$nfilas = mysqli_num_rows($consulta);
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Junteate - Mis Habitaciones</title>
+    <title>Junteate - Mis Habitaciones Alquiladas</title>
     <style>
         body {
             background-color: #000000;
@@ -86,6 +90,137 @@ $nfilas = mysqli_num_rows($consulta);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
+        .welcome-container {
+            background-color: #000000;
+            border: 2px solid #ae8b4f;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px;
+            color: #ffffff;
+            position: absolute;
+            top: 0px;
+            right: 10px;
+            text-align: right;
+            font-family: 'Helvetica', Arial, sans-serif;
+        }
+
+        .welcome-container strong {
+            font-family: 'Helvetica', Arial, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .welcome-container a {
+            color: #ae8b4f;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            font-family: 'Helvetica', Arial, sans-serif;
+        }
+
+        .welcome-container a:hover {
+            color: #ffffff;
+        }
+
+        .habitaciones-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 40px 20px;
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .habitacion-card {
+            background-color: #000000;
+            border: 2px solid #ae8b4f;
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            color: #ffffff;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .habitacion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
+        }
+
+        .habitacion-imagen {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .habitacion-titulo {
+            color: #ae8b4f;
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .habitacion-info {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .habitacion-propietario {
+            color: #ae8b4f;
+            font-size: 16px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .habitacion-precio {
+            color: #ae8b4f;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .anular-button {
+            background-color: #ff4444;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .anular-button:hover {
+            background-color: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .no-habitaciones {
+            text-align: center;
+            color: #ae8b4f;
+            font-size: 18px;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        .fecha-alquiler {
+            color: #ae8b4f;
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
         .dropdown {
             position: relative;
             display: inline-block;
@@ -126,136 +261,6 @@ $nfilas = mysqli_num_rows($consulta);
             transform: none;
             box-shadow: none;
         }
-
-        .welcome-container {
-            background-color: #000000;
-            border: 2px solid #ae8b4f;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px;
-            color: #ffffff;
-            position: absolute;
-            top: 0px;
-            right: 10px;
-            text-align: right;
-            font-family: 'Helvetica', Arial, sans-serif;
-        }
-
-        .welcome-container strong {
-            font-family: 'Helvetica', Arial, sans-serif;
-            font-size: 14px;
-            font-weight: normal;
-        }
-
-        .welcome-container a {
-            color: #ae8b4f;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-            font-family: 'Helvetica', Arial, sans-serif;
-        }
-
-        .welcome-container a:hover {
-            color: #ffffff;
-        }
-
-        .pisos-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            padding: 40px 20px;
-            margin-top: 20px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .piso-card {
-            background-color: #000000;
-            border: 2px solid #ae8b4f;
-            border-radius: 15px;
-            padding: 20px;
-            width: 100%;
-            color: #ffffff;
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .piso-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
-        }
-
-        .piso-imagen {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .piso-titulo {
-            color: #ae8b4f;
-            font-size: 24px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .piso-info {
-            margin-bottom: 10px;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
-        .piso-precio {
-            color: #ae8b4f;
-            font-size: 22px;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-
-        .piso-tipo {
-            display: block;
-            padding: 8px 15px;
-            background-color: #ae8b4f;
-            color: #000000;
-            border-radius: 15px;
-            font-size: 14px;
-            margin: 15px 0 0;
-            font-weight: bold;
-            text-align: left;
-            width: fit-content;
-        }
-
-        .delete-button {
-            background-color: #ff4444;
-            color: #ffffff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 15px;
-            font-size: 14px;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-
-        .delete-button:hover {
-            background-color: #ff0000;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-        }
-
-        .no-pisos {
-            text-align: center;
-            color: #ae8b4f;
-            font-size: 18px;
-            margin-top: 40px;
-            padding: 20px;
-        }
     </style>
 </head>
 <body>
@@ -288,29 +293,38 @@ $nfilas = mysqli_num_rows($consulta);
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 
-    <div class="pisos-container">
+    <div class="habitaciones-container">
         <?php
+        $nfilas = mysqli_num_rows($resultado);
         if ($nfilas > 0) {
-            for ($i=0; $i<$nfilas; $i++) {
-                $resultado = mysqli_fetch_array($consulta);
-                echo "<div class='piso-card'>";
-                echo "<img src='../../../" . str_replace('../../', '', $resultado['foto']) . "' alt='Foto del piso' class='piso-imagen'>";
-                echo "<div class='piso-titulo'>" . $resultado['direccion'] . "</div>";
-                echo "<div class='piso-info'>" . $resultado['localidad'] . ", " . $resultado['provincia'] . "</div>";
-                echo "<div class='piso-info'>Código Postal: " . $resultado['codigo_postal'] . "</div>";
-                echo "<div class='piso-info'>" . $resultado['descripcion'] . "</div>";
-                echo "<div class='piso-precio'>" . $resultado['precio'] . "€</div>";
-                echo "<form action='borrarmishabitaciones2.php' method='POST' style='margin-top: 10px;'>";
-                echo "<input type='hidden' name='id_habitacion' value='" . $resultado['id_habitacion'] . "'>";
-                echo "<button type='submit' class='delete-button'>Eliminar</button>";
+            while ($fila = mysqli_fetch_array($resultado)) {
+                echo "<div class='habitacion-card'>";
+                echo "<img src='../../../" . str_replace('../../', '', $fila['foto']) . "' alt='Foto de la habitación' class='habitacion-imagen'>";
+                echo "<div class='habitacion-titulo'>" . $fila['direccion'] . "</div>";
+                echo "<div class='habitacion-info'>" . $fila['localidad'] . ", " . $fila['provincia'] . "</div>";
+                echo "<div class='habitacion-info'>Código Postal: " . $fila['codigo_postal'] . "</div>";
+                echo "<div class='habitacion-info'>" . $fila['descripcion'] . "</div>";
+                
+                // Obtener información del propietario
+                $sql_propietario = "SELECT nombre FROM Usuarios WHERE id_usuario = " . $fila['id_usuario'];
+                $result_propietario = mysqli_query($conexion, $sql_propietario);
+                $propietario = mysqli_fetch_assoc($result_propietario);
+                
+                echo "<div class='habitacion-propietario'>Propietario: " . $propietario['nombre'] . "</div>";
+                echo "<div class='habitacion-precio'>" . $fila['precio'] . "€/mes</div>";
+                echo "<div class='fecha-alquiler'>Alquilada el: " . date('d/m/Y', strtotime($fila['fecha_transaccion'])) . "</div>";
+                
+                echo "<form action='procesaranularalquilerhab.php' method='POST'>";
+                echo "<input type='hidden' name='id_habitacion' value='" . $fila['id_habitacion'] . "'>";
+                echo "<button type='submit' class='anular-button'>Anular Alquiler</button>";
                 echo "</form>";
+                
                 echo "</div>";
             }
         } else {
-            echo "<div class='no-pisos'>No hay habitaciones disponibles</div>";
+            echo "<div class='no-habitaciones'>No tienes habitaciones alquiladas</div>";
         }
 
-        // Cerrar conexión
         mysqli_close($conexion);
         ?>
     </div>

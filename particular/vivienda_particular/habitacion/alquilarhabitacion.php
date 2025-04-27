@@ -14,7 +14,7 @@ $conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
     or die("No se puede conectar con el servidor");
 
 // Enviar consulta
-$instruccion = "SELECT * FROM habitaciones WHERE disponible = 'si'";
+$instruccion = "SELECT * FROM Habitaciones WHERE disponible = 'si'";
 $consulta = mysqli_query($conexion, $instruccion)
     or die("Fallo en la consulta");
 
@@ -25,7 +25,7 @@ $nfilas = mysqli_num_rows($consulta);
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Junteate - Mis Pisos</title>
+    <title>Junteate - Habitaciones en alquiler</title>
     <style>
         body {
             background-color: #000000;
@@ -160,7 +160,7 @@ $nfilas = mysqli_num_rows($consulta);
             color: #ffffff;
         }
 
-        .pisos-container {
+        .habitaciones-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -172,7 +172,7 @@ $nfilas = mysqli_num_rows($consulta);
             margin-right: auto;
         }
 
-        .piso-card {
+        .habitacion-card {
             background-color: #000000;
             border: 2px solid #ae8b4f;
             border-radius: 15px;
@@ -184,12 +184,12 @@ $nfilas = mysqli_num_rows($consulta);
             flex-direction: column;
         }
 
-        .piso-card:hover {
+        .habitacion-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
         }
 
-        .piso-imagen {
+        .habitacion-imagen {
             width: 100%;
             height: 300px;
             object-fit: cover;
@@ -197,45 +197,77 @@ $nfilas = mysqli_num_rows($consulta);
             margin-bottom: 15px;
         }
 
-        .piso-titulo {
+        .habitacion-titulo {
             color: #ae8b4f;
             font-size: 24px;
             margin-bottom: 15px;
             font-weight: bold;
         }
 
-        .piso-info {
+        .habitacion-info {
             margin-bottom: 10px;
             font-size: 16px;
             line-height: 1.5;
         }
 
-        .piso-precio {
+        .habitacion-propietario {
+            color: #ae8b4f;
+            font-size: 16px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .habitacion-precio {
             color: #ae8b4f;
             font-size: 22px;
             font-weight: bold;
             margin-top: 15px;
         }
 
-        .piso-tipo {
-            display: block;
-            padding: 8px 15px;
-            background-color: #ae8b4f;
+        .alquilar-button {
+            background-color: #4CAF50;
             color: #000000;
+            border: none;
+            padding: 10px 20px;
             border-radius: 15px;
             font-size: 14px;
-            margin: 15px 0 0;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-weight: bold;
-            text-align: left;
-            width: fit-content;
         }
 
-        .no-pisos {
+        .alquilar-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .no-fondos {
+            color: #ff4444;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .no-habitaciones {
             text-align: center;
             color: #ae8b4f;
             font-size: 18px;
             margin-top: 40px;
             padding: 20px;
+        }
+
+        .en-propiedad {
+            background-color: #0066cc;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            width: fit-content;
         }
     </style>
 </head>
@@ -249,6 +281,7 @@ $nfilas = mysqli_num_rows($consulta);
             <button onclick="location.href='alquilarhabitacion.php'">Alquilar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='buscaralquilarhabitacion.php'">buscar habitaciones en alquiler</button>
+                <button onclick="location.href='habitacionesalquiladas.php'">habitaciones alquiladas</button>
             </div>
         </div>
         <div class="dropdown">
@@ -262,29 +295,56 @@ $nfilas = mysqli_num_rows($consulta);
         </div>
     </nav>
 
-
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
         <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 
-    <div class="pisos-container">
+    <div class="habitaciones-container">
         <?php
         if ($nfilas > 0) {
             for ($i=0; $i<$nfilas; $i++) {
                 $resultado = mysqli_fetch_array($consulta);
-                echo "<div class='piso-card'>";
-                echo "<img src='../../../" . str_replace('../../', '', $resultado['foto']) . "' alt='Foto del piso' class='piso-imagen'>";
-                echo "<div class='piso-titulo'>" . $resultado['direccion'] . "</div>";
-                echo "<div class='piso-info'>" . $resultado['localidad'] . ", " . $resultado['provincia'] . "</div>";
-                echo "<div class='piso-info'>Código Postal: " . $resultado['codigo_postal'] . "</div>";
-                echo "<div class='piso-info'>" . $resultado['descripcion'] . "</div>";
-                echo "<div class='piso-precio'>" . $resultado['precio'] . "€</div>";
+                echo "<div class='habitacion-card'>";
+                echo "<img src='../../../" . str_replace('../../', '', $resultado['foto']) . "' alt='Foto de la habitación' class='habitacion-imagen'>";
+                echo "<div class='habitacion-titulo'>" . $resultado['direccion'] . "</div>";
+                echo "<div class='habitacion-info'>" . $resultado['localidad'] . ", " . $resultado['provincia'] . "</div>";
+                echo "<div class='habitacion-info'>Código Postal: " . $resultado['codigo_postal'] . "</div>";
+                echo "<div class='habitacion-info'>" . $resultado['descripcion'] . "</div>";
+                
+                // Obtener información del propietario
+                $sql_propietario = "SELECT nombre FROM Usuarios WHERE id_usuario = " . $resultado['id_usuario'];
+                $result_propietario = mysqli_query($conexion, $sql_propietario);
+                $propietario = mysqli_fetch_assoc($result_propietario);
+                
+                echo "<div class='habitacion-propietario'>Propietario: " . $propietario['nombre'] . "</div>";
+                echo "<div class='habitacion-precio'>" . $resultado['precio'] . "€/mes</div>";
+                
+                // Verificar si la habitación es del usuario actual
+                if ($resultado['id_usuario'] == $_SESSION['id_usuario']) {
+                    echo "<div class='en-propiedad'>En Propiedad</div>";
+                } else {
+                    // Verificar fondos del usuario
+                    $sql_cuenta = "SELECT saldo FROM Cuenta WHERE id_usuario = " . $_SESSION['id_usuario'];
+                    $result_cuenta = mysqli_query($conexion, $sql_cuenta);
+                    $cuenta = mysqli_fetch_assoc($result_cuenta);
+                    
+                    if ($cuenta && $cuenta['saldo'] >= $resultado['precio']) {
+                        echo "<form action='procesaralquilerhabitacion.php' method='POST'>";
+                        echo "<input type='hidden' name='id_habitacion' value='" . $resultado['id_habitacion'] . "'>";
+                        echo "<input type='hidden' name='precio' value='" . $resultado['precio'] . "'>";
+                        echo "<button type='submit' class='alquilar-button'>Alquilar Habitación</button>";
+                        echo "</form>";
+                    } else {
+                        echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
+                    }
+                }
+                
                 echo "</div>";
             }
         } else {
-            echo "<div class='no-pisos'>No hay habitaciones disponibles</div>";
+            echo "<div class='no-habitaciones'>No hay habitaciones disponibles para alquilar</div>";
         }
 
         // Cerrar conexión
