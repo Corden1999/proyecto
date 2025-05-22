@@ -2,14 +2,14 @@
 session_start();
 
 // Verificar si el usuario ha iniciado sesión
-if (!isset($_SESSION['id_usuario'])) {
+if (!isset($_SESSION['loggedin'])) {
     header("Location: ../../sesiones/iniciosesion.html");
     exit();
 }
 
 // Verificar que se recibió el ID del local
 if (!isset($_POST['id_piso'])) {
-    header("Location: borrarmispisos.php");
+    header("Location: mispisos.php");
     exit();
 }
 
@@ -21,29 +21,20 @@ $conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
 $id_piso = mysqli_real_escape_string($conexion, $_POST['id_piso']);
 $id_usuario = $_SESSION['id_usuario'];
 
-// Verificar que el local existe y pertenece al usuario
-$verificar = "SELECT id_piso FROM Pisos WHERE id_piso = '$id_piso' AND id_usuario = '$id_usuario'";
-$resultado = mysqli_query($conexion, $verificar);
+// Eliminar transacciones de alquiler relacionadas con el piso
+$consulta_alquiler = "DELETE FROM Transaccion_piso_alquiler WHERE id_piso = '$id_piso'";
+mysqli_query($conexion, $consulta_alquiler);
 
-if (mysqli_num_rows($resultado) > 0) {
-    // Primero eliminar las transacciones relacionadas
-    $eliminar_transacciones = "DELETE FROM Transaccion_piso_alquiler WHERE id_piso = '$id_piso'";
-    mysqli_query($conexion, $eliminar_transacciones);
-    
-    $eliminar_transacciones_venta = "DELETE FROM Transaccion_piso_venta WHERE id_piso = '$id_piso'";
-    mysqli_query($conexion, $eliminar_transacciones_venta);
-    
-    // Luego eliminar el local
-    $instruccion = "DELETE FROM Pisos WHERE id_piso = '$id_piso' AND id_usuario = '$id_usuario'";
-    
-    if (mysqli_query($conexion, $instruccion)) {
-        header("Location: borrarmispisos.php");
-    } else {
-        header("Location: borrarmispisos.php");
-    }
-} else {
-    header("Location: borrarmispisos.php");
-}
+// Eliminar transacciones de venta relacionadas con el piso
+$consulta_venta = "DELETE FROM Transaccion_piso_venta WHERE id_piso = '$id_piso'";
+mysqli_query($conexion, $consulta_venta);
+
+// Eliminar el piso solo si pertenece al usuario
+$consulta_borrar = "DELETE FROM Pisos WHERE id_piso = '$id_piso' AND id_usuario = '$id_usuario'";
+mysqli_query($conexion, $consulta_borrar);
 
 mysqli_close($conexion);
+
+header("Location: mispisos.php");
+exit();
 ?>  

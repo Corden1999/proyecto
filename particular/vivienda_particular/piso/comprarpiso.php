@@ -62,7 +62,7 @@ $nfilas = mysqli_num_rows($consulta);
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -136,7 +136,7 @@ $nfilas = mysqli_num_rows($consulta);
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -305,8 +305,6 @@ $nfilas = mysqli_num_rows($consulta);
             <button onclick="location.href='arrendarpiso.php'">Arrendar / vender piso</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mispisos.php'">mis pisos</button>
-                <button onclick="location.href='borrarmispisos.php'">borrar mis pisos</button>
-                <button onclick="location.href='editarmispisos.php'">editar mis pisos</button>
                 <button onclick="location.href='buscarmispisos.php'">buscar mis pisos</button>
             </div>
         </div>
@@ -314,7 +312,8 @@ $nfilas = mysqli_num_rows($consulta);
 
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 
@@ -349,7 +348,7 @@ $nfilas = mysqli_num_rows($consulta);
                     $cuenta = mysqli_fetch_assoc($result_cuenta);
                     
                     if ($cuenta && $cuenta['saldo'] >= $resultado['precio']) {
-                        echo "<form action='procesarcomprapiso.php' method='POST'>";
+                        echo "<form action='comprarpiso2.php' method='POST'>";
                         echo "<input type='hidden' name='id_piso' value='" . $resultado['id_piso'] . "'>";
                         echo "<input type='hidden' name='precio' value='" . $resultado['precio'] . "'>";
                         echo "<button type='submit' class='comprar-button'>Comprar Piso</button>";

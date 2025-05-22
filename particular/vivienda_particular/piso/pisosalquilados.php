@@ -65,7 +65,7 @@ $resultado = mysqli_query($conexion, $sql)
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -98,7 +98,7 @@ $resultado = mysqli_query($conexion, $sql)
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -296,8 +296,6 @@ $resultado = mysqli_query($conexion, $sql)
             <button onclick="location.href='arrendarpiso.php'">Arrendar / vender piso</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mispisos.php'">mis pisos</button>
-                <button onclick="location.href='borrarmispisos.php'">borrar mis pisos</button>
-                <button onclick="location.href='editarmispisos.php'">editar mis pisos</button>
                 <button onclick="location.href='buscarmispisos.php'">buscar mis pisos</button>
             </div>
         </div>
@@ -305,7 +303,8 @@ $resultado = mysqli_query($conexion, $sql)
 
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 

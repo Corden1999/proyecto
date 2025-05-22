@@ -11,30 +11,35 @@ if (!isset($_SESSION['loggedin'])) {
 $conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
     or die("No se puede conectar con el servidor");
 
-// Obtener el ID del piso a eliminar
-$id_habitacion = $_POST['id_habitacion'];
-
-// Verificar que el piso pertenece al usuario actual
-$verificar = "SELECT id_usuario FROM Habitaciones WHERE id_habitacion = $id_habitacion";
-$resultado = mysqli_query($conexion, $verificar);
-$fila = mysqli_fetch_array($resultado);
-
-if ($fila['id_usuario'] == $_SESSION['id_usuario']) {
-    // Eliminar el piso
-    $instruccion = "DELETE FROM Habitaciones WHERE id_habitacion = $id_habitacion";
+// Verificar si se recibió el ID de la habitación
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id_habitacion'])) {
+    $id_habitacion = $_POST['id_habitacion'];
     
-    if (mysqli_query($conexion, $instruccion)) {
-        // Redirigir de vuelta a borrarmishabitaciones.php con mensaje de éxito
-        header("Location: borrarmishabitaciones.php?mensaje=eliminado");
+    // Primero eliminar las transacciones relacionadas
+    $consulta_transacciones = "DELETE FROM Transaccion_habitacion_alquiler 
+                             WHERE id_habitacion = '$id_habitacion'";
+    
+    if (mysqli_query($conexion, $consulta_transacciones)) {
+        // Ahora eliminar la habitación
+        $consulta = "DELETE FROM Habitaciones 
+                    WHERE id_habitacion = '$id_habitacion' 
+                    AND id_usuario = " . $_SESSION['id_usuario'];
+
+        if (mysqli_query($conexion, $consulta)) {
+            // Redirigir a la página de mis habitaciones
+            header("Location: mishabitaciones.php");
+            exit();
+        } else {
+            echo "Error al eliminar la habitación: " . mysqli_error($conexion);
+        }
     } else {
-        // Redirigir de vuelta a borrarmishabitaciones.php con mensaje de error
-        header("Location: borrarmishabitaciones.php?mensaje=error");
+        echo "Error al eliminar las transacciones relacionadas: " . mysqli_error($conexion);
     }
 } else {
-    // Redirigir de vuelta a borrarmishabitaciones.php con mensaje de error
-    header("Location: borrarmishabitaciones.php?mensaje=no_permitido");
+    // Si no se recibió el ID, redirigir a la página de mis habitaciones
+    header("Location: mishabitaciones.php");
+    exit();
 }
 
-// Cerrar conexión
 mysqli_close($conexion);
 ?> 

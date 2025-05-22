@@ -61,7 +61,7 @@ $nfilas = mysqli_num_rows($consulta);
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -135,7 +135,7 @@ $nfilas = mysqli_num_rows($consulta);
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -233,6 +233,7 @@ $nfilas = mysqli_num_rows($consulta);
         .piso-disponible {
             display: block;
             padding: 8px 15px;
+            background-color: #4CAF50;
             color: #000000;
             border-radius: 15px;
             font-size: 14px;
@@ -242,12 +243,17 @@ $nfilas = mysqli_num_rows($consulta);
             width: fit-content;
         }
 
-        .disponible-si {
-            background-color: #4CAF50;
-        }
-
-        .disponible-no {
+        .piso-no-disponible {
+            display: block;
+            padding: 8px 15px;
             background-color: #ff4444;
+            color: #000000;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 15px 0 0;
+            font-weight: bold;
+            text-align: left;
+            width: fit-content;
         }
 
         .no-pisos {
@@ -256,6 +262,25 @@ $nfilas = mysqli_num_rows($consulta);
             font-size: 18px;
             margin-top: 40px;
             padding: 20px;
+        }
+
+        .ver-detalles-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .ver-detalles-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
         }
     </style>
 </head>
@@ -279,8 +304,6 @@ $nfilas = mysqli_num_rows($consulta);
             <button onclick="location.href='arrendarpiso.php'">Arrendar / vender piso</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mispisos.php'">mis pisos</button>
-                <button onclick="location.href='borrarmispisos.php'">borrar mis pisos</button>
-                <button onclick="location.href='editarmispisos.php'">editar mis pisos</button>
                 <button onclick="location.href='buscarmispisos.php'">buscar mis pisos</button>
             </div>
         </div>
@@ -288,7 +311,8 @@ $nfilas = mysqli_num_rows($consulta);
 
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 
@@ -305,8 +329,18 @@ $nfilas = mysqli_num_rows($consulta);
                 echo "<div class='piso-info'>" . $resultado['descripcion'] . "</div>";
                 echo "<div class='piso-precio'>" . $resultado['precio'] . "€</div>";
                 echo "<div class='piso-tipo'>" . ucfirst($resultado['tipo']) . "</div>";
-                echo "<div class='piso-disponible " . ($resultado['disponible'] == 'si' ? 'disponible-si' : 'disponible-no') . "'>" . 
-                     ($resultado['disponible'] == 'si' ? 'Disponible' : 'No disponible') . "</div>";
+                if ($resultado['disponible'] == 'si') {
+                    echo "<div class='piso-disponible'>Disponible</div>";
+                } else {
+                    echo "<div class='piso-no-disponible'>No disponible</div>";
+                }
+                
+                echo "<form action='mispisos2.php' method='POST'>";
+                echo "<input type='hidden' name='id_piso' value='" . $resultado['id_piso'] . "'>";
+                echo "<input type='hidden' name='precio' value='" . $resultado['precio'] . "'>";
+                echo "<button type='submit' class='ver-detalles-button'>Ver Detalles</button>";
+                echo "</form>";
+                
                 echo "</div>";
             }
         } else {

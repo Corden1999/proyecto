@@ -41,7 +41,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -115,7 +115,7 @@ session_start();
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -186,8 +186,6 @@ session_start();
             <button onclick="location.href='arrendarlocal.php'">Arrendar / venderlocal</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mislocales.php'">mis locales</button>
-                <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>
-                <button onclick="location.href='editarmislocales.php'">editar mis locales</button>
                 <button onclick="location.href='buscarmislocales.php'">buscar mis locales</button>
             </div>
         </div>
@@ -197,7 +195,8 @@ session_start();
     $name = $_SESSION['name'];
     echo "<div class='welcome-container'>
         <strong>¡Bienvenido! $name</strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>";
     ?>

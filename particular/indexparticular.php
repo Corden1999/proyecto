@@ -47,7 +47,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -200,11 +200,7 @@ session_start();
             </div>
         </div>
         <div class="dropdown">
-            <button onclick="location.href='#empleo'">Empleo</button>
-            <div class="dropdown-content">
-                <button onclick="location.href='./empleo_particular/buscar.php'">Buscar Empleo</button>
-                <button onclick="location.href='./empleo_particular/mis_solicitudes.php'">Mis Solicitudes</button>
-            </div>
+            <button onclick="location.href='./empleo_particular/empleosparticular.php'">Empleo</button>
         </div>
         <button onclick="location.href='../banca/banca.html'">Banca</button>
     </nav>
@@ -213,7 +209,8 @@ session_start();
     $name = $_SESSION['name'];
     echo "<div class='welcome-container'>
         <strong>¡Bienvenido!</strong> $name
-        <a href='../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../sesiones/logout.php'>Cerrar Sesión</a>
     </div>";
     ?>

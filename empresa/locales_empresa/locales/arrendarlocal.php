@@ -51,7 +51,7 @@ $id_usuario = $_SESSION['id_usuario'];
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -125,7 +125,7 @@ $id_usuario = $_SESSION['id_usuario'];
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -241,8 +241,6 @@ $id_usuario = $_SESSION['id_usuario'];
             <button onclick="location.href='arrendarlocal.php'">Arrendar / vender local</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mislocales.php'">mis locales</button>
-                <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>
-                <button onclick="location.href='editarmislocales.php'">editar mis locales</button>
                 <button onclick="location.href='buscarmislocales.php'">buscar mis locales</button>
             </div>
         </div>
@@ -252,8 +250,9 @@ $id_usuario = $_SESSION['id_usuario'];
     $name = $_SESSION['name'];
     echo "<div class='welcome-container'>
         <strong>¡Bienvenido! $name</strong><br>
-        <a href='../../sesiones/editarperfil.php'>Editar Perfil</a>
-        <a href='../../sesiones/logout.php'>Cerrar Sesión</a>
+        <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
+        <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>";
     ?>
 

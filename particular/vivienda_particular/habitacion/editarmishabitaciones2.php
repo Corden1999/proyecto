@@ -1,11 +1,45 @@
 <?php
 session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['loggedin'])) {
+    header("Location: ../../sesiones/iniciosesion.html");
+    exit();
+}
+
+$name = $_SESSION['name'];
+
+// Conectar con el servidor de base de datos
+$conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
+    or die("No se puede conectar con el servidor");
+
+// Obtener el ID de la habitación
+$id_habitacion = isset($_GET['id_habitacion']) ? $_GET['id_habitacion'] : null;
+
+if (!$id_habitacion) {
+    header("Location: mishabitaciones.php");
+    exit();
+}
+
+// Obtener información de la habitación
+$consulta = "SELECT * FROM Habitaciones 
+             WHERE id_habitacion = '$id_habitacion' 
+             AND id_usuario = " . $_SESSION['id_usuario'];
+$resultado = mysqli_query($conexion, $consulta)
+    or die("Fallo en la consulta");
+
+$habitacion = mysqli_fetch_array($resultado);
+
+if (!$habitacion) {
+    header("Location: mishabitaciones.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Junteate - Arrendar Piso</title>
+    <title>Junteate - Editar Habitación</title>
     <style>
         body {
             background-color: #000000;
@@ -41,7 +75,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -115,7 +149,7 @@ session_start();
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -228,80 +262,64 @@ session_start();
             <button onclick="location.href='arrendarhabitacion.php'">Arrendar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mishabitaciones.php'">mis habitaciones</button>
-                <button onclick="location.href='borrarmishabitaciones.php'">borrar habitaciones</button>
-                <button onclick="location.href='editarmishabitaciones.php'">editar habitaciones</button>
                 <button onclick="location.href='buscarmishabitaciones.php'">buscar mis habitaciones</button>
             </div>
         </div>
     </nav>
 
-    <?php
-    $name = $_SESSION['name'];
-    echo "<div class='welcome-container'>
-        <strong>¡Bienvenido! $name</strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+    <div class='welcome-container'>
+        <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
-    </div>";
+    </div>
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "rootroot";
-    $dbname = "proyecto";
-
-    $conn = new mysqli($servername, $username, $password, $dbname)
-     or die("Connection failed: " . mysqli_connect_error());
-
-    $id_habitacion = $_GET['id_habitacion'];
-    $sql = "SELECT * FROM Habitaciones WHERE id_habitacion = $id_habitacion";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-
-    if (!$row) {
-        echo "Habitación no encontrada";
-        exit();
-    }
-
-    mysqli_close($conn);
-    ?>
-
-<div class="form-container">
+    <div class="form-container">
         <h2>Editar Habitación</h2>
         <form action="editarmishabitaciones3.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_habitacion" value="<?php echo $row['id_habitacion']; ?>">
+            <input type="hidden" name="id_habitacion" value="<?php echo $habitacion['id_habitacion']; ?>">
 
             <div class="form-group">
                 <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" name="direccion" value="<?php echo $row['direccion']; ?>" required>
+                <input type="text" id="direccion" name="direccion" value="<?php echo htmlspecialchars($habitacion['direccion']); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="localidad">Localidad:</label>
-                <input type="text" id="localidad" name="localidad" value="<?php echo $row['localidad']; ?>" required>
+                <input type="text" id="localidad" name="localidad" value="<?php echo htmlspecialchars($habitacion['localidad']); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="provincia">Provincia:</label>
-                <input type="text" id="provincia" name="provincia" value="<?php echo $row['provincia']; ?>" required>
+                <input type="text" id="provincia" name="provincia" value="<?php echo htmlspecialchars($habitacion['provincia']); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="codigo_postal">Código Postal:</label>
-                <input type="text" id="codigo_postal" name="codigo_postal" value="<?php echo $row['codigo_postal']; ?>" required>
+                <input type="text" id="codigo_postal" name="codigo_postal" value="<?php echo htmlspecialchars($habitacion['codigo_postal']); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="precio">Precio:</label>
-                <input type="number" id="precio" name="precio" step="0.01" value="<?php echo $row['precio']; ?>" required>
+                <input type="number" id="precio" name="precio" step="0.01" value="<?php echo htmlspecialchars($habitacion['precio']); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="descripcion">Descripción:</label>
-                <textarea id="descripcion" name="descripcion" required><?php echo $row['descripcion']; ?></textarea>
+                <textarea id="descripcion" name="descripcion" required><?php echo htmlspecialchars($habitacion['descripcion']); ?></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="disponible">Disponibilidad:</label>
+                <select id="disponible" name="disponible" required>
+                    <option value="si" <?php echo $habitacion['disponible'] == 'si' ? 'selected' : ''; ?>>Disponible</option>
+                    <option value="no" <?php echo $habitacion['disponible'] == 'no' ? 'selected' : ''; ?>>No disponible</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="foto">Foto actual:</label>
-                <img src="../../../<?php echo str_replace('../../', '', $row['foto']); ?>" alt="Foto actual" style="max-width: 200px; margin: 10px 0;">
+                <img src="../../../<?php echo str_replace('../../', '', $habitacion['foto']); ?>" alt="Foto actual" style="max-width: 200px; margin: 10px 0;">
                 <input type="file" id="foto" name="foto" accept="image/*">
             </div>
 
@@ -313,3 +331,6 @@ session_start();
 
 </body>
 </html>
+<?php
+mysqli_close($conexion);
+?>

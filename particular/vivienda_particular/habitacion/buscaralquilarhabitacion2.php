@@ -41,7 +41,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -115,7 +115,7 @@ session_start();
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -268,8 +268,6 @@ session_start();
             <button onclick="location.href='arrendarhabitacion.php'">Arrendar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mishabitaciones.php'">mis habitaciones</button>
-                <button onclick="location.href='borrarmishabitaciones.php'">borrar habitaciones</button>
-                <button onclick="location.href='editarmishabitaciones.php'">editar habitaciones</button>
                 <button onclick="location.href='buscarmishabitaciones.php'">buscar mis habitaciones</button>
             </div>
         </div>
@@ -280,7 +278,8 @@ session_start();
 
     echo "<div class='welcome-container'>
         <strong>¡Bienvenido! $name</strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>";
 
@@ -327,7 +326,7 @@ session_start();
                     $cuenta = mysqli_fetch_assoc($result_cuenta);
                     
                     if ($cuenta && $cuenta['saldo'] >= $fila['precio']) {
-                        echo "<form action='procesaralquilerhabitacion.php' method='POST'>";
+                        echo "<form action='alquilarhabitacion2.php' method='POST'>";
                         echo "<input type='hidden' name='id_habitacion' value='" . $fila['id_habitacion'] . "'>";
                         echo "<input type='hidden' name='precio' value='" . $fila['precio'] . "'>";
                         echo "<button type='submit' class='alquilar-button'>Alquilar Habitación</button>";

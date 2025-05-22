@@ -1,5 +1,75 @@
 <?php
 session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['loggedin'])) {
+    header("Location: ../../sesiones/iniciosesion.html");
+    exit();
+}
+
+// Conectar con el servidor de base de datos
+$conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
+    or die("No se puede conectar con el servidor");
+
+// Verificar si se recibieron los datos del formulario
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id_habitacion = $_POST['id_habitacion'];
+    $direccion = $_POST['direccion'];
+    $localidad = $_POST['localidad'];
+    $provincia = $_POST['provincia'];
+    $codigo_postal = $_POST['codigo_postal'];
+    $precio = $_POST['precio'];
+    $descripcion = $_POST['descripcion'];
+    $disponible = $_POST['disponible'];
+
+    // Procesar la foto si se ha subido una nueva
+    $foto = "";
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+        $target_dir = "../../../img/habitaciones/";
+        $target_file = $target_dir . basename($_FILES["foto"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        
+        // Verificar si es una imagen real
+        $check = getimagesize($_FILES["foto"]["tmp_name"]);
+        if($check !== false) {
+            // Verificar el tipo de archivo
+            if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg") {
+                if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
+                    $foto = "img/habitaciones/" . basename($_FILES["foto"]["name"]);
+                }
+            }
+        }
+    } else {
+        // Mantener la foto actual
+        $consulta_foto = "SELECT foto FROM Habitaciones WHERE id_habitacion = '$id_habitacion'";
+        $resultado_foto = mysqli_query($conexion, $consulta_foto);
+        $fila_foto = mysqli_fetch_array($resultado_foto);
+        $foto = $fila_foto['foto'];
+    }
+
+    // Actualizar la habitación en la base de datos
+    $consulta = "UPDATE Habitaciones SET 
+                 direccion = '$direccion',
+                 localidad = '$localidad',
+                 provincia = '$provincia',
+                 codigo_postal = '$codigo_postal',
+                 precio = '$precio',
+                 descripcion = '$descripcion',
+                 disponible = '$disponible',
+                 foto = '$foto'
+                 WHERE id_habitacion = '$id_habitacion' 
+                 AND id_usuario = " . $_SESSION['id_usuario'];
+
+    if (mysqli_query($conexion, $consulta)) {
+        // Redirigir de vuelta a la página de detalles
+        header("Location: mishabitaciones2.php");
+        exit();
+    } else {
+        echo "Error al actualizar la habitación: " . mysqli_error($conexion);
+    }
+}
+
+mysqli_close($conexion);
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +112,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -116,7 +186,7 @@ session_start();
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -276,7 +346,8 @@ session_start();
      $name = $_SESSION['name'];
      echo "<div class='welcome-container'>
          <strong>¡Bienvenido! $name</strong><br>
-         <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+         <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+         <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
          <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
      </div>";
      

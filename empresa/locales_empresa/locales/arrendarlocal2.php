@@ -105,7 +105,7 @@ mysqli_close($conexion);
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -282,11 +282,9 @@ mysqli_close($conexion);
             </div>
         </div>
         <div class="dropdown">
-            <button onclick="location.href='arrendarlocal.php'">Arrendar / vender local</button>
+            <button onclick="location.href='arrendarlocal.php'">Arrendar / venderlocal</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mislocales.php'">mis locales</button>
-                <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>
-                <button onclick="location.href='editarmislocales.php'">editar mis locales</button>
                 <button onclick="location.href='buscarmislocales.php'">buscar mis locales</button>
             </div>
         </div>
@@ -294,8 +292,10 @@ mysqli_close($conexion);
 
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-            <a href='../../sesiones/editarperfil.php'>Editar Perfil</a>
-        <a href='../../sesiones/logout.php'>Cerrar Sesión</a>
+        <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
+        <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
+        
     </div>
 
     <div class="form-container">

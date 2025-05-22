@@ -67,7 +67,7 @@ $nfilas = mysqli_num_rows($consulta);
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -320,7 +320,8 @@ $nfilas = mysqli_num_rows($consulta);
 
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 
@@ -355,7 +356,7 @@ $nfilas = mysqli_num_rows($consulta);
                     $cuenta = mysqli_fetch_assoc($result_cuenta);
                     
                     if ($cuenta && $cuenta['saldo'] >= $resultado['precio']) {
-                        echo "<form action='procesaralquiler.php' method='POST'>";
+                        echo "<form action='alquilarlocal2.php' method='POST'>";
                         echo "<input type='hidden' name='id_local' value='" . $resultado['id_local'] . "'>";
                         echo "<input type='hidden' name='precio' value='" . $resultado['precio'] . "'>";
                         echo "<button type='submit' class='alquilar-button'>Alquilar Local</button>";

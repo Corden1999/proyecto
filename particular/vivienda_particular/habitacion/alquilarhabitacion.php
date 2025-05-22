@@ -61,7 +61,7 @@ $nfilas = mysqli_num_rows($consulta);
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -135,7 +135,7 @@ $nfilas = mysqli_num_rows($consulta);
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -235,12 +235,40 @@ $nfilas = mysqli_num_rows($consulta);
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
+            margin-right: 10px;
         }
 
         .alquilar-button:hover {
             background-color: #45a049;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .contactar-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .contactar-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .botones-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
         }
 
         .no-fondos {
@@ -288,8 +316,6 @@ $nfilas = mysqli_num_rows($consulta);
             <button onclick="location.href='arrendarhabitacion.php'">Arrendar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mishabitaciones.php'">mis habitaciones</button>
-                <button onclick="location.href='borrarmishabitaciones.php'">borrar habitaciones</button>
-                <button onclick="location.href='editarmishabitaciones.php'">editar habitaciones</button>
                 <button onclick="location.href='buscarmishabitaciones.php'">buscar mis habitaciones</button>
             </div>
         </div>
@@ -297,7 +323,8 @@ $nfilas = mysqli_num_rows($consulta);
 
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 
@@ -330,8 +357,9 @@ $nfilas = mysqli_num_rows($consulta);
                     $result_cuenta = mysqli_query($conexion, $sql_cuenta);
                     $cuenta = mysqli_fetch_assoc($result_cuenta);
                     
+                    echo "<div class='botones-container'>";
                     if ($cuenta && $cuenta['saldo'] >= $resultado['precio']) {
-                        echo "<form action='procesaralquilerhabitacion.php' method='POST'>";
+                        echo "<form action='alquilarhabitacion2.php' method='POST'>";
                         echo "<input type='hidden' name='id_habitacion' value='" . $resultado['id_habitacion'] . "'>";
                         echo "<input type='hidden' name='precio' value='" . $resultado['precio'] . "'>";
                         echo "<button type='submit' class='alquilar-button'>Alquilar Habitación</button>";
@@ -339,6 +367,9 @@ $nfilas = mysqli_num_rows($consulta);
                     } else {
                         echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
                     }
+                    
+                    echo "<a href='../../../sesiones/chat.php?id_usuario=" . $resultado['id_usuario'] . "' class='contactar-button'>Contactar</a>";
+                    echo "</div>";
                 }
                 
                 echo "</div>";

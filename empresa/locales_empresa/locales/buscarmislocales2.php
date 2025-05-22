@@ -41,7 +41,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -115,7 +115,7 @@ session_start();
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -313,6 +313,25 @@ session_start();
             margin-top: 40px;
             padding: 20px;
         }
+
+        .ver-detalles-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .ver-detalles-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -335,8 +354,6 @@ session_start();
             <button onclick="location.href='arrendarlocal.php'">Arrendar / venderlocal</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mislocales.php'">mis locales</button>
-                <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>
-                <button onclick="location.href='editarmislocales.php'">editar mis locales</button>
                 <button onclick="location.href='buscarmislocales.php'">buscar mis locales</button>
             </div>
         </div>
@@ -347,7 +364,8 @@ session_start();
 
     echo "<div class='welcome-container'>
         <strong>¡Bienvenido! $name</strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>";
 
@@ -386,6 +404,13 @@ session_start();
                 } else {
                     echo "<div class='piso-no-disponible'>No disponible</div>";
                 }
+                
+                echo "<form action='mislocales2.php' method='POST'>";
+                echo "<input type='hidden' name='id_local' value='" . $fila['id_local'] . "'>";
+                echo "<input type='hidden' name='precio' value='" . $fila['precio'] . "'>";
+                echo "<button type='submit' class='ver-detalles-button'>Ver Detalles</button>";
+                echo "</form>";
+                
                 echo "</div>";
             }
             echo "</div>";

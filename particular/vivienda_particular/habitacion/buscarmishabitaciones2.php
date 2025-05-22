@@ -1,11 +1,55 @@
 <?php
 session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['loggedin'])) {
+    header("Location: ../../sesiones/iniciosesion.html");
+    exit();
+}
+
+$name = $_SESSION['name'];
+
+// Conectar con el servidor de base de datos
+$conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
+    or die("No se puede conectar con el servidor");
+
+// Obtener los parámetros de búsqueda
+$direccion = isset($_POST['direccion']) ? $_POST['direccion'] : '';
+$localidad = isset($_POST['localidad']) ? $_POST['localidad'] : '';
+$provincia = isset($_POST['provincia']) ? $_POST['provincia'] : '';
+$codigo_postal = isset($_POST['codigo_postal']) ? $_POST['codigo_postal'] : '';
+$precio = isset($_POST['precio']) ? $_POST['precio'] : '';
+
+// Construir la consulta SQL
+$consulta = "SELECT h.*, u.nombre as nombre_propietario
+             FROM Habitaciones h 
+             JOIN Usuarios u ON h.id_usuario = u.id_usuario 
+             WHERE h.id_usuario = " . $_SESSION['id_usuario'];
+
+if (!empty($direccion)) {
+    $consulta .= " AND h.direccion LIKE '%$direccion%'";
+}
+if (!empty($localidad)) {
+    $consulta .= " AND h.localidad LIKE '%$localidad%'";
+}
+if (!empty($provincia)) {
+    $consulta .= " AND h.provincia LIKE '%$provincia%'";
+}
+if (!empty($codigo_postal)) {
+    $consulta .= " AND h.codigo_postal LIKE '%$codigo_postal%'";
+}
+if (!empty($precio)) {
+    $consulta .= " AND h.precio <= $precio";
+}
+
+$resultado = mysqli_query($conexion, $consulta)
+    or die("Fallo en la consulta");
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Junteate - Buscar Mis Habitaciones</title>
+    <title>Junteate - Resultados de Búsqueda</title>
     <style>
         body {
             background-color: #000000;
@@ -41,7 +85,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -115,7 +159,7 @@ session_start();
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -140,130 +184,148 @@ session_start();
             color: #ffffff;
         }
 
-        .form-container {
-            background-color: #000000;
-            border: 2px solid #ae8b4f;
-            border-radius: 15px;
-            margin: 30px auto;
-            padding: 30px;
-            max-width: 800px;
-            color: #ffffff;
-        }
-
-        .form-container h2 {
-            color: #ae8b4f;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #ae8b4f;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ae8b4f;
-            border-radius: 5px;
-            background-color: #000000;
-            color: #ffffff;
-            font-size: 16px;
-        }
-
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-
-        .form-group input[type="submit"] {
-            background-color: #ae8b4f;
-            color: #000000;
-            border: none;
-            padding: 12px 25px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-            width: auto;
-            margin-top: 20px;
-        }
-
-        .form-group input[type="submit"]:hover {
-            background-color: #ffffff;
-            color: #000000;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
         .pisos-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 40px 20px;
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .piso-card {
             background-color: #000000;
             border: 2px solid #ae8b4f;
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 20px;
-            margin: 10px;
-            width: calc(33.33% - 20px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 100%;
+            color: #ffffff;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .piso-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
         }
 
         .piso-imagen {
             width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
 
         .piso-titulo {
             color: #ae8b4f;
-            font-size: 18px;
+            font-size: 24px;
+            margin-bottom: 15px;
             font-weight: bold;
-            margin-bottom: 5px;
         }
 
         .piso-info {
-            color: #ffffff;
-            font-size: 14px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
         }
 
         .piso-precio {
             color: #ae8b4f;
-            font-size: 16px;
+            font-size: 22px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .piso-tipo {
-            color: #ffffff;
+            display: block;
+            padding: 8px 15px;
+            background-color: #ae8b4f;
+            color: #000000;
+            border-radius: 15px;
             font-size: 14px;
-            font-weight: normal;
+            margin: 15px 0 0;
+            font-weight: bold;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .piso-disponible {
+            display: block;
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: #000000;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 15px 0 0;
+            font-weight: bold;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .piso-no-disponible {
+            display: block;
+            padding: 8px 15px;
+            background-color: #ff4444;
+            color: #000000;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 15px 0 0;
+            font-weight: bold;
+            text-align: left;
+            width: fit-content;
         }
 
         .no-pisos {
-            color: #ffffff;
-            font-size: 16px;
             text-align: center;
-            margin: 20px;
+            color: #ae8b4f;
+            font-size: 18px;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        .ver-detalles-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .ver-detalles-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .volver-button {
+            background-color: #ae8b4f;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .volver-button:hover {
+            background-color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
         }
     </style>
 </head>
@@ -284,61 +346,52 @@ session_start();
             <button onclick="location.href='arrendarhabitacion.php'">Arrendar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mishabitaciones.php'">mis habitaciones</button>
-                <button onclick="location.href='borrarmishabitaciones.php'">borrar habitaciones</button>
-                <button onclick="location.href='editarmishabitaciones.php'">editar habitaciones</button>
                 <button onclick="location.href='buscarmishabitaciones.php'">buscar mis habitaciones</button>
             </div>
         </div>
     </nav>
 
-
-    <?php
-    $name = $_SESSION['name'];
-
-    echo "<div class='welcome-container'>
-        <strong>¡Bienvenido! $name</strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+    <div class='welcome-container'>
+        <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
-    </div>";
+    </div>
 
-     // Conectar con el servidor de base de datos
-     $conexion = mysqli_connect ("localhost", "root", "rootroot","proyecto")
-     or die ("No se puede conectar con el servidor");   
-
-     $direccion = $_POST['direccion'];
-     $localidad = $_POST['localidad'];
-     $provincia = $_POST['provincia'];
-     $precio = $_POST['precio'];
-     
-
-     $sql = "SELECT * FROM habitaciones WHERE direccion = '$direccion' OR localidad = '$localidad' OR provincia = '$provincia' OR precio = '$precio'";
-     $resultado = mysqli_query($conexion, $sql)
-        or die ("Error al ejecutar la consulta");
-
-        $nfilas = mysqli_num_rows($resultado);
-        if ($nfilas > 0) {
-            echo "<div class='pisos-container'>";
-            for ($i=0; $i<$nfilas; $i++) {
-                $fila = mysqli_fetch_array($resultado);
+    <div class="pisos-container">
+        <?php
+        if (mysqli_num_rows($resultado) > 0) {
+            while ($habitacion = mysqli_fetch_assoc($resultado)) {
                 echo "<div class='piso-card'>";
-                echo "<img src='../../../" . str_replace('../../', '', $fila['foto']) . "' alt='Foto de la habitación' class='piso-imagen'>";
-                echo "<div class='piso-titulo'>" . $fila['direccion'] . "</div>";
-                echo "<div class='piso-info'>" . $fila['localidad'] . ", " . $fila['provincia'] . "</div>";
-                echo "<div class='piso-info'>Código Postal: " . $fila['codigo_postal'] . "</div>";
-                echo "<div class='piso-info'>" . $fila['descripcion'] . "</div>";
-                echo "<div class='piso-precio'>" . $fila['precio'] . "€</div>";
+                echo "<img src='../../../" . str_replace('../../', '', $habitacion['foto']) . "' alt='Foto de la habitación' class='piso-imagen'>";
+                echo "<div class='piso-titulo'>" . htmlspecialchars($habitacion['direccion']) . "</div>";
+                echo "<div class='piso-info'>" . htmlspecialchars($habitacion['localidad'] . ", " . $habitacion['provincia']) . "</div>";
+                echo "<div class='piso-info'>Código Postal: " . htmlspecialchars($habitacion['codigo_postal']) . "</div>";
+                echo "<div class='piso-info'>" . htmlspecialchars($habitacion['descripcion']) . "</div>";
+                echo "<div class='piso-precio'>" . htmlspecialchars($habitacion['precio']) . "€/mes</div>";
+                if ($habitacion['disponible'] == 'si') {
+                    echo "<div class='piso-disponible'>Disponible</div>";
+                } else {
+                    echo "<div class='piso-no-disponible'>No disponible</div>";
+                }
+                
+                echo "<form action='mishabitaciones2.php' method='POST'>";
+                echo "<input type='hidden' name='id_habitacion' value='" . $habitacion['id_habitacion'] . "'>";
+                echo "<input type='hidden' name='precio' value='" . $habitacion['precio'] . "'>";
+                echo "<button type='submit' class='ver-detalles-button'>Ver Detalles</button>";
+                echo "</form>";
+                
                 echo "</div>";
             }
-            echo "</div>";
         } else {
-            echo "<div class='no-pisos'>No hay habitaciones que coincidan con los criterios de búsqueda</div>";
+            echo "<div class='no-pisos'>No se encontraron habitaciones que coincidan con los criterios de búsqueda</div>";
         }
-        
-  
-     
-    mysqli_close($conexion);
-    ?>
+        ?>
 
-    
+        <a href="buscarmishabitaciones.php" class="volver-button">Volver a Buscar</a>
+    </div>
 </body>
 </html>
+<?php
+mysqli_close($conexion);
+?>

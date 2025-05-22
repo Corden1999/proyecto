@@ -42,7 +42,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -278,7 +278,8 @@ session_start();
      $name = $_SESSION['name'];
      echo "<div class='welcome-container'>
          <strong>¡Bienvenido! $name</strong><br>
-         <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+         <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+         <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
          <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
      </div>";
      

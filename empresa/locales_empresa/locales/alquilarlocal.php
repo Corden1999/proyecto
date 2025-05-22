@@ -61,7 +61,7 @@ $nfilas = mysqli_num_rows($consulta);
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -135,7 +135,7 @@ $nfilas = mysqli_num_rows($consulta);
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -263,14 +263,6 @@ $nfilas = mysqli_num_rows($consulta);
             font-weight: bold;
         }
 
-        .no-pisos {
-            text-align: center;
-            color: #ae8b4f;
-            font-size: 18px;
-            margin-top: 40px;
-            padding: 20px;
-        }
-
         .en-propiedad {
             display: block;
             padding: 8px 15px;
@@ -282,6 +274,41 @@ $nfilas = mysqli_num_rows($consulta);
             font-weight: bold;
             text-align: left;
             width: fit-content;
+        }
+
+        .contactar-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .contactar-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .botones-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .no-pisos {
+            text-align: center;
+            color: #ae8b4f;
+            font-size: 18px;
+            margin-top: 40px;
+            padding: 20px;
         }
     </style>
 </head>
@@ -305,8 +332,6 @@ $nfilas = mysqli_num_rows($consulta);
             <button onclick="location.href='arrendarlocal.php'">Arrendar / venderlocal</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mislocales.php'">mis locales</button>
-                <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>
-                <button onclick="location.href='editarmislocales.php'">editar mis locales</button>
                 <button onclick="location.href='buscarmislocales.php'">buscar mis locales</button>
             </div>
         </div>
@@ -314,8 +339,9 @@ $nfilas = mysqli_num_rows($consulta);
 
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
-        <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
+            <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+            <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
+            <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 
     <div class="pisos-container">
@@ -348,8 +374,9 @@ $nfilas = mysqli_num_rows($consulta);
                     $result_cuenta = mysqli_query($conexion, $sql_cuenta);
                     $cuenta = mysqli_fetch_assoc($result_cuenta);
                     
+                    echo "<div class='botones-container'>";
                     if ($cuenta && $cuenta['saldo'] >= $resultado['precio']) {
-                        echo "<form action='procesaralquiler.php' method='POST'>";
+                        echo "<form action='alquilarlocal2.php' method='POST' style='display: inline;'>";
                         echo "<input type='hidden' name='id_local' value='" . $resultado['id_local'] . "'>";
                         echo "<input type='hidden' name='precio' value='" . $resultado['precio'] . "'>";
                         echo "<button type='submit' class='alquilar-button'>Alquilar Local</button>";
@@ -357,6 +384,10 @@ $nfilas = mysqli_num_rows($consulta);
                     } else {
                         echo "<div class='no-fondos'>No tiene fondos suficientes</div>";
                     }
+                    
+                    // Botón de contactar
+                    echo "<a href='../../../sesiones/chatempresa.php?id_usuario=" . $resultado['id_usuario'] . "' class='contactar-button'>Contactar</a>";
+                    echo "</div>";
                 }
                 
                 echo "</div>";

@@ -1,11 +1,40 @@
 <?php
 session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['loggedin'])) {
+    header("Location: ../../sesiones/iniciosesion.html");
+    exit();
+}
+
+$name = $_SESSION['name'];
+
+// Conectar con el servidor de base de datos
+$conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
+    or die("No se puede conectar con el servidor");
+
+// Obtener los datos del local
+$id_local = isset($_POST['id_local']) ? $_POST['id_local'] : null;
+$direccion = isset($_POST['direccion']) ? $_POST['direccion'] : '';
+$localidad = isset($_POST['localidad']) ? $_POST['localidad'] : '';
+$provincia = isset($_POST['provincia']) ? $_POST['provincia'] : '';
+$codigo_postal = isset($_POST['codigo_postal']) ? $_POST['codigo_postal'] : '';
+$precio = isset($_POST['precio']) ? $_POST['precio'] : '';
+$descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
+$tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
+$disponible = isset($_POST['disponible']) ? $_POST['disponible'] : '';
+$foto = isset($_POST['foto']) ? $_POST['foto'] : '';
+
+if (!$id_local) {
+    header("Location: mislocales.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Junteate - Arrendar Piso</title>
+    <title>Junteate - Editar Local</title>
     <style>
         body {
             background-color: #000000;
@@ -41,7 +70,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -141,22 +170,20 @@ session_start();
         }
 
         .form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
             background-color: #000000;
             border: 2px solid #ae8b4f;
             border-radius: 15px;
-            margin: 30px auto;
-            padding: 30px;
-            max-width: 800px;
             color: #ffffff;
         }
 
-        .form-container h2 {
+        .form-title {
             color: #ae8b4f;
-            text-align: center;
+            font-size: 24px;
             margin-bottom: 20px;
-            font-size: 28px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            text-align: center;
         }
 
         .form-group {
@@ -165,12 +192,13 @@ session_start();
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
             color: #ae8b4f;
+            margin-bottom: 5px;
             font-weight: bold;
         }
 
-        .form-group input,
+        .form-group input[type="text"],
+        .form-group input[type="number"],
         .form-group textarea,
         .form-group select {
             width: 100%;
@@ -187,32 +215,48 @@ session_start();
             resize: vertical;
         }
 
-        .form-group input[type="submit"] {
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group input[type="file"] {
+            color: #ffffff;
+        }
+
+        .submit-button {
             background-color: #ae8b4f;
             color: #000000;
             border: none;
             padding: 12px 25px;
-            cursor: pointer;
-            font-size: 16px;
             border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             font-weight: bold;
-            width: auto;
+            width: 100%;
             margin-top: 20px;
         }
 
-        .form-group input[type="submit"]:hover {
+        .submit-button:hover {
             background-color: #ffffff;
-            color: #000000;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
+        }
+
+        .current-image {
+            max-width: 300px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+
+        .image-preview {
+            margin-top: 10px;
+            color: #ae8b4f;
         }
     </style>
 </head>
 <body>
-<div class="header">
+    <div class="header">
         <h1 class="titulo"><a href="../../indexempresa.php"><img src="../../../img/titulo.png" alt="Junteate Logo"></a></h1>
     </div>
     
@@ -232,105 +276,86 @@ session_start();
             <div class="dropdown-content">
                 <button onclick="location.href='mislocales.php'">mis locales</button>
                 <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>
-                <button onclick="location.href='editarmislocales.php'">editar mis locales</button>
                 <button onclick="location.href='buscarmislocales.php'">buscar mis locales</button>
             </div>
         </div>
     </nav>
 
-    <?php
-    $name = $_SESSION['name'];
-    echo "<div class='welcome-container'>
-        <strong>¡Bienvenido! $name</strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+    <div class='welcome-container'>
+        <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
+        <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
-    </div>";
-
-    $servername = "localhost";
-    $username = "root";
-    $password = "rootroot";
-    $dbname = "proyecto";
-
-    $conn = new mysqli($servername, $username, $password, $dbname)
-     or die("Connection failed: " . mysqli_connect_error());
-
-    $id_local = $_GET['id_local'];
-    $sql = "SELECT * FROM Locales WHERE id_local = $id_local";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-
-    if (!$row) {
-        echo "Local no encontrado";
-        exit();
-    }
-
-    mysqli_close($conn);
-    
-    ?>
+    </div>
 
     <div class="form-container">
-        <h2>Editar Local</h2>
-        <form action="editarmislocales3.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_local" value="<?php echo $row['id_local']; ?>">
-
+        <h2 class="form-title">Editar Local</h2>
+        <form action="procesareditarlocal.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id_local" value="<?php echo $id_local; ?>">
+            
             <div class="form-group">
                 <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" name="direccion" value="<?php echo $row['direccion']; ?>" required>
+                <input type="text" id="direccion" name="direccion" value="<?php echo htmlspecialchars($direccion); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="localidad">Localidad:</label>
-                <input type="text" id="localidad" name="localidad" value="<?php echo $row['localidad']; ?>" required>
+                <input type="text" id="localidad" name="localidad" value="<?php echo htmlspecialchars($localidad); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="provincia">Provincia:</label>
-                <input type="text" id="provincia" name="provincia" value="<?php echo $row['provincia']; ?>" required>
+                <input type="text" id="provincia" name="provincia" value="<?php echo htmlspecialchars($provincia); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="codigo_postal">Código Postal:</label>
-                <input type="text" id="codigo_postal" name="codigo_postal" value="<?php echo $row['codigo_postal']; ?>" required>
+                <input type="text" id="codigo_postal" name="codigo_postal" value="<?php echo htmlspecialchars($codigo_postal); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="precio">Precio:</label>
-                <input type="number" id="precio" name="precio" step="0.01" value="<?php echo $row['precio']; ?>" required>
+                <input type="number" id="precio" name="precio" value="<?php echo htmlspecialchars($precio); ?>" step="0.01" required>
             </div>
 
             <div class="form-group">
                 <label for="descripcion">Descripción:</label>
-                <textarea id="descripcion" name="descripcion" required><?php echo $row['descripcion']; ?></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="disponible">Disponible:</label>
-                <select id="disponible" name="disponible" required>
-                    <option value="si" <?php if ($row['disponible'] == 'si') echo 'selected'; ?>>Sí</option>
-                    <option value="no" <?php if ($row['disponible'] == 'no') echo 'selected'; ?>>No</option>
-                </select>
+                <textarea id="descripcion" name="descripcion" required><?php echo htmlspecialchars($descripcion); ?></textarea>
             </div>
 
             <div class="form-group">
                 <label for="tipo">Tipo:</label>
                 <select id="tipo" name="tipo" required>
-                    <option value="alquiler" <?php if ($row['tipo'] == 'alquiler') echo 'selected'; ?>>Alquiler</option>
-                    <option value="venta" <?php if ($row['tipo'] == 'venta') echo 'selected'; ?>>Venta</option>
+                    <option value="alquiler" <?php echo $tipo == 'alquiler' ? 'selected' : ''; ?>>Alquiler</option>
+                    <option value="venta" <?php echo $tipo == 'venta' ? 'selected' : ''; ?>>Venta</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="foto">Foto actual:</label>
-                <img src="../../../<?php echo str_replace('../../', '', $row['foto']); ?>" alt="Foto actual" style="max-width: 200px; margin: 10px 0;">
-                <input type="file" id="foto" name="foto" accept="image/*">
+                <label for="disponible">Disponibilidad:</label>
+                <select id="disponible" name="disponible" required>
+                    <option value="si" <?php echo $disponible == 'si' ? 'selected' : ''; ?>>Disponible</option>
+                    <option value="no" <?php echo $disponible == 'no' ? 'selected' : ''; ?>>No disponible</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Actualizar Local">
+                <label for="foto">Foto:</label>
+                <input type="file" id="foto" name="foto" accept="image/*">
+                <input type="hidden" name="foto_actual" value="<?php echo htmlspecialchars($foto); ?>">
+                <?php if ($foto): ?>
+                    <div class="image-preview">
+                        <p>Imagen actual:</p>
+                        <img src="../../../<?php echo str_replace('../../', '', $foto); ?>" alt="Foto actual" class="current-image">
+                    </div>
+                <?php endif; ?>
             </div>
-            
+
+            <button type="submit" class="submit-button">Guardar Cambios</button>
         </form>
     </div>
-
 </body>
 </html>
+<?php
+mysqli_close($conexion);
+?>

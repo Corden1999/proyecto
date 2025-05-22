@@ -2,14 +2,8 @@
 session_start();
 
 // Verificar si el usuario ha iniciado sesión
-if (!isset($_SESSION['id_usuario'])) {
+if (!isset($_SESSION['loggedin'])) {
     header("Location: ../../sesiones/iniciosesion.html");
-    exit();
-}
-
-// Verificar que se recibió el ID del local
-if (!isset($_POST['id_local'])) {
-    header("Location: borrarmislocales.php");
     exit();
 }
 
@@ -17,32 +11,36 @@ if (!isset($_POST['id_local'])) {
 $conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
     or die("No se puede conectar con el servidor");
 
-// Obtener el ID del local a eliminar
-$id_local = mysqli_real_escape_string($conexion, $_POST['id_local']);
-$id_usuario = $_SESSION['id_usuario'];
+// Obtener el ID del local a borrar
+$id_local = isset($_POST['id_local']) ? $_POST['id_local'] : null;
 
-// Verificar que el local existe y pertenece al usuario
-$verificar = "SELECT id_local FROM Locales WHERE id_local = '$id_local' AND id_usuario = '$id_usuario'";
-$resultado = mysqli_query($conexion, $verificar);
-
-if (mysqli_num_rows($resultado) > 0) {
-    // Primero eliminar las transacciones relacionadas
-    $eliminar_transacciones = "DELETE FROM Transaccion_local_alquiler WHERE id_local = '$id_local'";
-    mysqli_query($conexion, $eliminar_transacciones);
+if ($id_local) {
+    // Verificar que el local pertenece al usuario actual
+    $consulta = "SELECT * FROM Locales WHERE id_local = '$id_local' AND id_usuario = " . $_SESSION['id_usuario'];
+    $resultado = mysqli_query($conexion, $consulta);
     
-    $eliminar_transacciones_venta = "DELETE FROM Transaccion_local_venta WHERE id_local = '$id_local'";
-    mysqli_query($conexion, $eliminar_transacciones_venta);
-    
-    // Luego eliminar el local
-    $instruccion = "DELETE FROM Locales WHERE id_local = '$id_local' AND id_usuario = '$id_usuario'";
-    
-    if (mysqli_query($conexion, $instruccion)) {
-        header("Location: borrarmislocales.php");
+    if (mysqli_num_rows($resultado) > 0) {
+        // Obtener la información de la foto antes de borrar
+        $local = mysqli_fetch_assoc($resultado);
+        $foto = $local['foto'];
+        
+        // Borrar el local de la base de datos
+        $sql = "DELETE FROM Locales WHERE id_local = '$id_local' AND id_usuario = " . $_SESSION['id_usuario'];
+        
+        if (mysqli_query($conexion, $sql)) {
+            // Si se borró correctamente, intentar borrar la foto si existe
+            if ($foto && file_exists("../../../" . str_replace('../../', '', $foto))) {
+                unlink("../../../" . str_replace('../../', '', $foto));
+            }
+            header("Location: mislocales.php?mensaje=Local eliminado correctamente");
+        } else {
+            header("Location: mislocales.php?error=Error al eliminar el local");
+        }
     } else {
-        header("Location: borrarmislocales.php");
+        header("Location: mislocales.php?error=No tienes permiso para eliminar este local");
     }
 } else {
-    header("Location: borrarmislocales.php");
+    header("Location: mislocales.php?error=ID de local no válido");
 }
 
 mysqli_close($conexion);

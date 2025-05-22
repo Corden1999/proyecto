@@ -104,7 +104,7 @@ mysqli_close($conexion);
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -281,8 +281,6 @@ mysqli_close($conexion);
             <button onclick="location.href='arrendarhabitacion.php'">Arrendar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mishabitaciones.php'">mis habitaciones</button>
-                <button onclick="location.href='borrarmishabitaciones.php'">borrar habitaciones</button>
-                <button onclick="location.href='editarmishabitaciones.php'">editar habitaciones</button>
                 <button onclick="location.href='buscarmishabitaciones.php'">buscar mis habitaciones</button>
             </div>
         </div>
@@ -290,7 +288,8 @@ mysqli_close($conexion);
 
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 

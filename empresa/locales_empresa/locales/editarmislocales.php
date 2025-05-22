@@ -1,11 +1,40 @@
 <?php
 session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['loggedin'])) {
+    header("Location: ../../sesiones/iniciosesion.html");
+    exit();
+}
+
+$name = $_SESSION['name'];
+
+// Conectar con el servidor de base de datos
+$conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
+    or die("No se puede conectar con el servidor");
+
+// Obtener los datos del local
+$id_local = isset($_POST['id_local']) ? $_POST['id_local'] : null;
+$direccion = isset($_POST['direccion']) ? $_POST['direccion'] : '';
+$localidad = isset($_POST['localidad']) ? $_POST['localidad'] : '';
+$provincia = isset($_POST['provincia']) ? $_POST['provincia'] : '';
+$codigo_postal = isset($_POST['codigo_postal']) ? $_POST['codigo_postal'] : '';
+$precio = isset($_POST['precio']) ? $_POST['precio'] : '';
+$descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
+$tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
+$disponible = isset($_POST['disponible']) ? $_POST['disponible'] : '';
+$foto = isset($_POST['foto']) ? $_POST['foto'] : '';
+
+if (!$id_local) {
+    header("Location: mislocales.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Junteate - Mis Pisos</title>
+    <title>Junteate - Editar Local</title>
     <style>
         body {
             background-color: #000000;
@@ -41,7 +70,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -140,106 +169,94 @@ session_start();
             color: #ffffff;
         }
 
-        .pisos-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            padding: 40px 20px;
-            margin-top: 20px;
+        .form-container {
             max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .piso-card {
+            margin: 40px auto;
+            padding: 20px;
             background-color: #000000;
             border: 2px solid #ae8b4f;
             border-radius: 15px;
-            padding: 20px;
-            width: 100%;
             color: #ffffff;
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
         }
 
-        .piso-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
-        }
-
-        .piso-imagen {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .piso-titulo {
+        .form-title {
             color: #ae8b4f;
             font-size: 24px;
-            margin-bottom: 15px;
-            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .piso-info {
-            margin-bottom: 10px;
-            font-size: 16px;
-            line-height: 1.5;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .piso-precio {
-            color: #ae8b4f;
-            font-size: 22px;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-
-        .piso-tipo {
+        .form-group label {
             display: block;
-            padding: 8px 15px;
+            color: #ae8b4f;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ae8b4f;
+            border-radius: 5px;
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group input[type="file"] {
+            color: #ffffff;
+        }
+
+        .submit-button {
             background-color: #ae8b4f;
             color: #000000;
-            border-radius: 15px;
-            font-size: 14px;
-            margin: 15px 0 0;
-            font-weight: bold;
-            text-align: left;
-            width: fit-content;
-        }
-
-        .delete-button {
-            background-color: #4a90e2;
-            color: #ffffff;
             border: none;
-            padding: 8px 15px;
-            border-radius: 15px;
-            font-size: 14px;
-            margin-top: 10px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
         }
 
-        .delete-button:hover {
-            background-color: #357abd;
+        .submit-button:hover {
+            background-color: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
         }
 
-        .no-pisos {
-            text-align: center;
+        .current-image {
+            max-width: 300px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+
+        .image-preview {
+            margin-top: 10px;
             color: #ae8b4f;
-            font-size: 18px;
-            margin-top: 40px;
-            padding: 20px;
         }
     </style>
 </head>
 <body>
-<div class="header">
+    <div class="header">
         <h1 class="titulo"><a href="../../indexempresa.php"><img src="../../../img/titulo.png" alt="Junteate Logo"></a></h1>
     </div>
     
@@ -255,62 +272,90 @@ session_start();
             </div>
         </div>
         <div class="dropdown">
-            <button onclick="location.href='arrendarlocal.php'">Arrendar / vender local</button>
+            <button onclick="location.href='arrendarlocal.php'">Arrendar / venderlocal</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mislocales.php'">mis locales</button>
                 <button onclick="location.href='borrarmislocales.php'">borrar mis locales</button>
-                <button onclick="location.href='editarmislocales.php'">editar mis locales</button>
                 <button onclick="location.href='buscarmislocales.php'">buscar mis locales</button>
             </div>
         </div>
     </nav>
-    <?php
-        $name = $_SESSION['name'];
-    ?>
+
     <div class='welcome-container'>
         <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+        <a href='../../../sesiones/mensajempresa.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilempresa.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
     </div>
 
-    <div class="pisos-container">
-        <?php
-        $conexion = mysqli_connect("localhost", "root", "rootroot",)
-        or die("No se puede conectar con el servidor");
-    
-        mysqli_select_db($conexion, "proyecto")
-        or die("No se puede conectar con la base de datos");
+    <div class="form-container">
+        <h2 class="form-title">Editar Local</h2>
+        <form action="procesareditarlocal.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id_local" value="<?php echo $id_local; ?>">
+            
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" value="<?php echo htmlspecialchars($direccion); ?>" required>
+            </div>
 
-        $id_usuario = $_SESSION['id_usuario'];
-        $instruccion = "SELECT * FROM Locales WHERE id_usuario = $id_usuario";
-        $consulta = mysqli_query($conexion, $instruccion)
-        or die("Fallo en la consulta");
+            <div class="form-group">
+                <label for="localidad">Localidad:</label>
+                <input type="text" id="localidad" name="localidad" value="<?php echo htmlspecialchars($localidad); ?>" required>
+            </div>
 
-        $nfilas = mysqli_num_rows($consulta);
-    if ($nfilas > 0) {
-        for ($i=0; $i<$nfilas; $i++) {
-            $resultado = mysqli_fetch_array($consulta);
-            echo "<div class='piso-card'>";
-            echo "<img src='../../../" . str_replace('../../', '', $resultado['foto']) . "' alt='Foto del piso' class='piso-imagen'>";
-            echo "<div class='piso-titulo'>" . $resultado['direccion'] . "</div>";
-            echo "<div class='piso-info'>" . $resultado['localidad'] . ", " . $resultado['provincia'] . "</div>";
-            echo "<div class='piso-info'>Código Postal: " . $resultado['codigo_postal'] . "</div>";
-            echo "<div class='piso-info'>" . $resultado['descripcion'] . "</div>";
-            echo "<div class='piso-precio'>" . $resultado['precio'] . "€</div>";
-            echo "<div class='piso-tipo'>" . ucfirst($resultado['tipo']) . "</div>";
-            echo "<form action='editarmislocales2.php' method='GET' style='margin-top: 10px;'>";
-            echo "<input type='hidden' name='id_local' value='" . $resultado['id_local'] . "'>";
-            echo "<button type='submit' class='delete-button'>Editar</button>";
-            echo "</form>";
-            echo "</div>";
-            }
-        } else {
-            echo "<div class='no-pisos'>No hay locales disponibles</div>";
-        }
+            <div class="form-group">
+                <label for="provincia">Provincia:</label>
+                <input type="text" id="provincia" name="provincia" value="<?php echo htmlspecialchars($provincia); ?>" required>
+            </div>
 
-    // Cerrar conexión
-        mysqli_close($conexion);
-        ?>
+            <div class="form-group">
+                <label for="codigo_postal">Código Postal:</label>
+                <input type="text" id="codigo_postal" name="codigo_postal" value="<?php echo htmlspecialchars($codigo_postal); ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="precio">Precio:</label>
+                <input type="number" id="precio" name="precio" value="<?php echo htmlspecialchars($precio); ?>" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" name="descripcion" required><?php echo htmlspecialchars($descripcion); ?></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="alquiler" <?php echo $tipo == 'alquiler' ? 'selected' : ''; ?>>Alquiler</option>
+                    <option value="venta" <?php echo $tipo == 'venta' ? 'selected' : ''; ?>>Venta</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="disponible">Disponibilidad:</label>
+                <select id="disponible" name="disponible" required>
+                    <option value="si" <?php echo $disponible == 'si' ? 'selected' : ''; ?>>Disponible</option>
+                    <option value="no" <?php echo $disponible == 'no' ? 'selected' : ''; ?>>No disponible</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="foto">Foto:</label>
+                <input type="file" id="foto" name="foto" accept="image/*">
+                <input type="hidden" name="foto_actual" value="<?php echo htmlspecialchars($foto); ?>">
+                <?php if ($foto): ?>
+                    <div class="image-preview">
+                        <p>Imagen actual:</p>
+                        <img src="../../../<?php echo str_replace('../../', '', $foto); ?>" alt="Foto actual" class="current-image">
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <button type="submit" class="submit-button">Guardar Cambios</button>
+        </form>
     </div>
 </body>
 </html>
+<?php
+mysqli_close($conexion);
+?> 

@@ -41,7 +41,7 @@
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -146,7 +146,7 @@
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -214,25 +214,20 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1 class="titulo"><a href="../index.html"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
+<div class="header">
+        <h1 class="titulo"><a href="../particular/indexparticular.php"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
     </div>
     
     <nav class="menu">
         <div class="dropdown">
-            <button onclick="location.href='#vivienda'">Vivienda</button>
+            <button onclick="location.href='../particular/vivienda_particular/piso/piso.php'">Vivienda</button>
             <div class="dropdown-content">
-                <button onclick="location.href='../vivienda/pisos.html'">Buscar Piso</button>
-                <button onclick="location.href='../vivienda/habitaciones.html'">Buscar Habitación</button>
-                <button onclick="location.href='../vivienda/locales_comerciales.html'">Buscar Local</button>
+                <button onclick="location.href='../particular/vivienda_particular/piso/piso.php'">Pisos</button>
+                <button onclick="location.href='../particular/vivienda_particular/habitacion/habitacion.php'">Habitaciones</button>
             </div>
         </div>
         <div class="dropdown">
-            <button onclick="location.href='#empleo'">Empleo</button>
-            <div class="dropdown-content">
-                <button onclick="location.href='../empleo/buscar.html'">Buscar Empleo</button>
-                <button onclick="location.href='../empleo/mis_solicitudes.html'">Mis Solicitudes</button>
-            </div>
+            <button onclick="location.href='../particular/empleo_particular/empleosparticular.php'">Empleo</button>
         </div>
         <button onclick="location.href='../banca/banca.html'">Banca</button>
     </nav>
@@ -242,6 +237,7 @@ $name = $_SESSION['name'];
 
 echo "<div class='welcome-container'>
     <strong>¡Bienvenido! $name</strong><br>
+    <a href='mensajeparticular.php'>Mensajes</a>
     <a href='editarperfil.php'>Editar Perfil</a>
     <a href='logout.php'>Cerrar Sesión</a>
 </div>";	
@@ -273,7 +269,7 @@ mysqli_close($conn);
 
     <div class="form-container">
         <h2>Editar Perfil</h2>
-        <form action="editarperfil2.php" method="post">
+        <form action="editarperfilparticular2.php" method="post">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" value="<?php echo $row['nombre']; ?>" >

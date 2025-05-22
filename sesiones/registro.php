@@ -43,6 +43,7 @@
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
+            margin-top: 80px;
         }
         
         .menu button {

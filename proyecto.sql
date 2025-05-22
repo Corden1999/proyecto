@@ -62,7 +62,11 @@ CREATE TABLE Empleos (
     id_usuario INT,
     titulo VARCHAR(200) NOT NULL,
     descripcion TEXT,
+    direccion VARCHAR(200) NOT NULL,
     codigo_postal VARCHAR(10) NOT NULL,
+    localidad VARCHAR(200) NOT NULL,
+    provincia VARCHAR(200) NOT NULL,
+    tipo_contrato VARCHAR(50) NOT NULL,
     salario DECIMAL(10, 2),
     fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
@@ -145,11 +149,49 @@ CREATE TABLE Gastos (
     FOREIGN KEY (id_cuenta) REFERENCES Cuenta(id_cuenta)
 );
 
-CREATE TABLE Recomendaciones (
-    id_recomendacion INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE Curriculum (
+    id_curriculum INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    telefono VARCHAR(15),
+    direccion VARCHAR(200),
+    codigo_postal VARCHAR(10),
+    experiencia TEXT,
+    formacion TEXT,
+    habilidades TEXT,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+);
+
+CREATE TABLE InscripcionesEmpleo (
+    id_inscripcion INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
     id_empleo INT,
-    id_piso INT,
-    fecha_recomendacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_empleo) REFERENCES Empleos(id_empleo),
-    FOREIGN KEY (id_piso) REFERENCES Pisos(id_piso)
+    fecha_inscripcion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
+    FOREIGN KEY (id_empleo) REFERENCES Empleos(id_empleo)
+);
+
+CREATE TABLE Chat (
+    id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
+    id_remitente INT,
+    id_destinatario INT,
+    mensaje TEXT NOT NULL,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_remitente) REFERENCES Usuarios(id_usuario),
+    FOREIGN KEY (id_destinatario) REFERENCES Usuarios(id_usuario)
+);
+
+CREATE TABLE Empleados (
+    id_empleado INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    id_usuario_contratante INT,
+    id_local INT,
+    cargo VARCHAR(100) NOT NULL,
+    salario DECIMAL(10, 2) NOT NULL,
+    fecha_contratacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
+    FOREIGN KEY (id_usuario_contratante) REFERENCES Usuarios(id_usuario),
+    FOREIGN KEY (id_local) REFERENCES Locales(id_local)
 );

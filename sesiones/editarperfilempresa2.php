@@ -42,7 +42,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -260,25 +260,17 @@ session_start();
     </style>
 </head>
 <body>
+    
     <div class="header">
-        <h1 class="titulo"><a href="../index.html"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
+        <h1 class="titulo"><a href="../empresa/indexempresa.php"><img src="../img/titulo.png" alt="Junteate Logo"></a></h1>
     </div>
     
     <nav class="menu">
         <div class="dropdown">
-            <button onclick="location.href='#vivienda'">Vivienda</button>
-            <div class="dropdown-content">
-                <button onclick="location.href='../vivienda/buscar_piso.html'">Buscar Piso</button>
-                <button onclick="location.href='../vivienda/buscar_habitacion.html'">Buscar Habitación</button>
-                <button onclick="location.href='../vivienda/buscar_local.html'">Buscar Local</button>
-            </div>
+            <button onclick="location.href='../empresa/locales_empresa/locales/locales.php'">Locales</button>
         </div>
         <div class="dropdown">
-            <button onclick="location.href='#empleo'">Empleo</button>
-            <div class="dropdown-content">
-                <button onclick="location.href='../empleo/buscar.html'">Buscar Empleo</button>
-                <button onclick="location.href='../empleo/mis_solicitudes.html'">Mis Solicitudes</button>
-            </div>
+            <button onclick="location.href='../empresa/empleo_empresa/publicaroferta.php'">Empleo</button>
         </div>
         <button onclick="location.href='../banca/banca.html'">Banca</button>
     </nav>
@@ -295,6 +287,7 @@ $name = $_SESSION['name'];
 
 echo "<div class='welcome-container'>
     <strong>¡Bienvenido! $name</strong><br>
+    <a href='mensajempresa.php'>Mensajes</a>
     <a href='editarperfil.php'>Editar Perfil</a>
     <a href='logout.php'>Cerrar Sesión</a>
 </div>";
@@ -340,12 +333,12 @@ $sql .= " WHERE id_usuario = '$id_usuario'";
 if (mysqli_query($conn, $sql)) {
     echo "<div class='result-container'>
             <div class='success-text'>Usuario actualizado con éxito</div>
-            <a href='editarperfil.php' class='back-link'>Volver al Perfil</a>
+            <a href='editarperfilempresa.php' class='back-link'>Volver al Perfil</a>
           </div>";
 } else {
     echo "<div class='result-container'>
             <div class='error-text'>Error al actualizar: " . mysqli_error($conn) . "</div>
-            <a href='editarperfil.php' class='back-link'>Volver al Perfil</a>
+            <a href='editarperfilempresa.php' class='back-link'>Volver al Perfil</a>
           </div>";
 }
 

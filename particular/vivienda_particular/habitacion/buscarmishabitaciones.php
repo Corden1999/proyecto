@@ -1,5 +1,17 @@
 <?php
 session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['loggedin'])) {
+    header("Location: ../../sesiones/iniciosesion.html");
+    exit();
+}
+
+$name = $_SESSION['name'];
+
+// Conectar con el servidor de base de datos
+$conexion = mysqli_connect("localhost", "root", "rootroot", "proyecto")
+    or die("No se puede conectar con el servidor");
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -41,7 +53,7 @@ session_start();
             display: flex;
             justify-content: space-between;
             padding: 15px 50px;
-            margin-top: 40px;
+            margin-top: 80px;
         }
         
         .menu button {
@@ -115,7 +127,7 @@ session_start();
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -228,22 +240,17 @@ session_start();
             <button onclick="location.href='arrendarhabitacion.php'">Arrendar habitación</button>
             <div class="dropdown-content">
                 <button onclick="location.href='mishabitaciones.php'">mis habitaciones</button>
-                <button onclick="location.href='borrarmishabitaciones.php'">borrar habitaciones</button>
-                <button onclick="location.href='editarmishabitaciones.php'">editar habitaciones</button>
                 <button onclick="location.href='buscarmishabitaciones.php'">buscar mis habitaciones</button>
             </div>
         </div>
     </nav>
 
-
-    <?php
-    $name = $_SESSION['name'];
-    echo "<div class='welcome-container'>
-        <strong>¡Bienvenido! $name</strong><br>
-        <a href='../../../sesiones/editarperfil.php'>Editar Perfil</a>
+    <div class='welcome-container'>
+        <strong>¡Bienvenido! <?php echo $name; ?></strong><br>
+        <a href='../../../sesiones/mensajeparticular.php'>Mensajes</a>
+        <a href='../../../sesiones/editarperfilparticular.php'>Editar Perfil</a>
         <a href='../../../sesiones/logout.php'>Cerrar Sesión</a>
-    </div>";
-    ?>
+    </div>
 
     <div class="form-container">
         <h2>Buscar Mis Habitaciones</h2>
@@ -264,7 +271,12 @@ session_start();
             </div>
 
             <div class="form-group">
-                <label for="precio">Precio:</label>
+                <label for="codigo_postal">Código Postal:</label>
+                <input type="text" id="codigo_postal" name="codigo_postal">
+            </div>
+
+            <div class="form-group">
+                <label for="precio">Precio máximo:</label>
                 <input type="number" id="precio" name="precio" step="0.01">
             </div>
 
@@ -273,6 +285,8 @@ session_start();
             </div>
         </form>
     </div>
-
 </body>
 </html>
+<?php
+mysqli_close($conexion);
+?>
