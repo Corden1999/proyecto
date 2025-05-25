@@ -202,7 +202,7 @@ session_start();
         <div class="dropdown">
             <button onclick="location.href='./empleo_particular/empleosparticular.php'">Empleo</button>
         </div>
-        <button onclick="location.href='../banca/banca.html'">Banca</button>
+        <button onclick="location.href='./banca_particular/bancaindex.php'">Banca</button>
     </nav>
 
     <?php

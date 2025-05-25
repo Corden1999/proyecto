@@ -140,6 +140,16 @@ CREATE TABLE Cuenta (
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
 );
 
+CREATE TABLE Movimientos (
+    id_movimiento INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    tipo ENUM('ingreso', 'gasto') NOT NULL,
+    cantidad DECIMAL(10, 2) NOT NULL,
+    concepto VARCHAR(255) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+);
+
 CREATE TABLE Gastos (
     id_gasto INT AUTO_INCREMENT PRIMARY KEY,
     id_cuenta INT,

@@ -311,7 +311,7 @@ $resultado = mysqli_query($conexion, $sql)
         <div class="dropdown">
             <button onclick="location.href='../particular/empleo_particular/empleosparticular.php'">Empleo</button>
         </div>
-        <button onclick="location.href='../banca/banca.html'">Banca</button>
+        <button onclick="location.href='../particular/banca_particular/bancaindex.php'">Banca</button>
     </nav>
 
     <div class='welcome-container'>

@@ -304,6 +304,7 @@ $resultado_trabajadores = mysqli_query($conexion, $consulta_trabajadores)
             padding: 10px 20px;
             border-radius: 15px;
             font-size: 14px;
+            margin-top: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
@@ -407,7 +408,7 @@ $resultado_trabajadores = mysqli_query($conexion, $consulta_trabajadores)
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
-            margin-top: 15px;
+            margin-top: 10px;
             width: fit-content;
             text-align: left;
         }
@@ -456,6 +457,103 @@ $resultado_trabajadores = mysqli_query($conexion, $consulta_trabajadores)
             color: #ae8b4f;
             font-size: 16px;
             font-weight: bold;
+        }
+
+        .hipoteca-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #000000;
+            border: 2px solid #ae8b4f;
+            border-radius: 15px;
+            color: #ffffff;
+        }
+
+        .hipoteca-titulo {
+            color: #ae8b4f;
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .hipoteca-form {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ae8b4f;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ae8b4f;
+            border-radius: 8px;
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffffff;
+        }
+
+        .calcular-button {
+            background-color: #ae8b4f;
+            color: #000000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .calcular-button:hover {
+            background-color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(174, 139, 79, 0.3);
+        }
+
+        .resultado-hipoteca {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(174, 139, 79, 0.1);
+            border-radius: 10px;
+        }
+
+        .resultado-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #ae8b4f;
+        }
+
+        .resultado-item:last-child {
+            border-bottom: none;
+        }
+
+        .resultado-label {
+            color: #ae8b4f;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .resultado-valor {
+            color: #ffffff;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -511,9 +609,8 @@ $resultado_trabajadores = mysqli_query($conexion, $consulta_trabajadores)
                     <button type="submit" class="comprar-button">Confirmar Compra</button>
                 </form>
 
-                <form action="contactar.php" method="POST" style="display: inline;">
-                    <input type="hidden" name="id_local" value="<?php echo $local['id_local']; ?>">
-                    <input type="hidden" name="id_propietario" value="<?php echo $local['id_usuario']; ?>">
+                <form action="../../../sesiones/chatempresa.php" method="GET" style="display: inline;">
+                    <input type="hidden" name="id_usuario" value="<?php echo $local['id_usuario']; ?>">
                     <button type="submit" class="contactar-button">Contactar</button>
                 </form>
             </div>
@@ -549,6 +646,47 @@ $resultado_trabajadores = mysqli_query($conexion, $consulta_trabajadores)
                 <div class="estadistica-card">
                     <div class="estadistica-valor"><?php echo $estadisticas['num_locales_ocupados']; ?></div>
                     <div class="estadistica-label">Locales Ocupados</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hipoteca-container">
+            <div class="hipoteca-titulo">Calculadora de Hipoteca</div>
+            <div class="hipoteca-form">
+                <div class="form-group">
+                    <label for="precio_inmueble">Precio del Inmueble (€):</label>
+                    <input type="number" id="precio_inmueble" value="<?php echo $local['precio']; ?>" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="ahorro">Ahorro Aportado (€):</label>
+                    <input type="number" id="ahorro" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="plazo_anos">Plazo en Años:</label>
+                    <input type="number" id="plazo_anos" min="1" max="40" value="30">
+                </div>
+                <div class="form-group">
+                    <label for="tipo_interes">Tipo de Interés Anual (%):</label>
+                    <input type="number" id="tipo_interes" min="0" step="0.01" value="3.5">
+                </div>
+                <button onclick="calcularHipoteca()" class="calcular-button">Calcular Hipoteca</button>
+            </div>
+            <div id="resultado-hipoteca" class="resultado-hipoteca" style="display: none;">
+                <div class="resultado-item">
+                    <div class="resultado-label">Préstamo Necesario:</div>
+                    <div class="resultado-valor" id="prestamo-necesario"></div>
+                </div>
+                <div class="resultado-item">
+                    <div class="resultado-label">Cuota Mensual:</div>
+                    <div class="resultado-valor" id="cuota-mensual"></div>
+                </div>
+                <div class="resultado-item">
+                    <div class="resultado-label">Total a Pagar:</div>
+                    <div class="resultado-valor" id="total-pagar"></div>
+                </div>
+                <div class="resultado-item">
+                    <div class="resultado-label">Interés Total:</div>
+                    <div class="resultado-valor" id="interes-total"></div>
                 </div>
             </div>
         </div>
@@ -595,6 +733,55 @@ $resultado_trabajadores = mysqli_query($conexion, $consulta_trabajadores)
 
         <a href="comprarlocal.php" class="volver-button">Volver a Locales en Venta</a>
     </div>
+
+    <script>
+        function calcularHipoteca() {
+            const precioInmueble = parseFloat(document.getElementById('precio_inmueble').value);
+            const ahorro = parseFloat(document.getElementById('ahorro').value) || 0;
+            const plazoAnos = parseInt(document.getElementById('plazo_anos').value);
+            const tipoInteres = parseFloat(document.getElementById('tipo_interes').value);
+
+            // Validaciones
+            if (precioInmueble <= 0 || ahorro < 0 || plazoAnos <= 0 || tipoInteres < 0) {
+                alert('Por favor, introduce valores válidos.');
+                return;
+            }
+
+            // Cálculo del préstamo
+            const prestamo = precioInmueble - ahorro;
+            
+            // Convertir interés anual a mensual
+            const interesMensual = (tipoInteres / 100) / 12;
+            
+            // Número de pagos mensuales
+            const numPagos = plazoAnos * 12;
+            
+            // Cálculo de la cuota mensual
+            let cuotaMensual;
+            if (interesMensual > 0) {
+                cuotaMensual = prestamo * (interesMensual * Math.pow(1 + interesMensual, numPagos)) / (Math.pow(1 + interesMensual, numPagos) - 1);
+            } else {
+                cuotaMensual = prestamo / numPagos;
+            }
+
+            const totalPagado = cuotaMensual * numPagos;
+            const interesTotal = totalPagado - prestamo;
+
+            // Mostrar resultados
+            document.getElementById('prestamo-necesario').textContent = formatNumber(prestamo) + ' €';
+            document.getElementById('cuota-mensual').textContent = formatNumber(cuotaMensual) + ' €';
+            document.getElementById('total-pagar').textContent = formatNumber(totalPagado) + ' €';
+            document.getElementById('interes-total').textContent = formatNumber(interesTotal) + ' €';
+            document.getElementById('resultado-hipoteca').style.display = 'block';
+        }
+
+        function formatNumber(number) {
+            return new Intl.NumberFormat('es-ES', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(number);
+        }
+    </script>
 </body>
 </html>
 <?php

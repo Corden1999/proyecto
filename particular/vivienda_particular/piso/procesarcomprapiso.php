@@ -59,15 +59,13 @@ try {
     mysqli_query($conexion, $sql_update_piso);
 
     // Registrar gasto para el comprador
-    $sql_gasto = "INSERT INTO Gastos (id_cuenta, descripcion, monto) 
-                  VALUES ((SELECT id_cuenta FROM Cuenta WHERE id_usuario = $id_usuario_comprador), 
-                  'Compra de piso', $precio)";
+    $sql_gasto = "INSERT INTO Movimientos (id_usuario, tipo, cantidad, concepto) 
+                  VALUES ($id_usuario_comprador, 'gasto', $precio, 'Compra de piso')";
     mysqli_query($conexion, $sql_gasto);
 
     // Registrar ingreso para el vendedor
-    $sql_ingreso = "INSERT INTO Gastos (id_cuenta, descripcion, monto) 
-                    VALUES ((SELECT id_cuenta FROM Cuenta WHERE id_usuario = $id_usuario_vendedor), 
-                    'Venta de piso', $precio)";
+    $sql_ingreso = "INSERT INTO Movimientos (id_usuario, tipo, cantidad, concepto) 
+                    VALUES ($id_usuario_vendedor, 'ingreso', $precio, 'Venta de piso')";
     mysqli_query($conexion, $sql_ingreso);
 
     // Confirmar transacción

@@ -384,9 +384,8 @@ $nfilas = mysqli_num_rows($consulta);
                     }
                     
                     // Botón de contactar
-                    echo "<form action='contactar.php' method='POST' style='display: inline;'>";
-                    echo "<input type='hidden' name='id_local' value='" . $resultado['id_local'] . "'>";
-                    echo "<input type='hidden' name='id_propietario' value='" . $resultado['id_usuario'] . "'>";
+                    echo "<form action='../../../sesiones/chatempresa.php' method='GET' style='display: inline;'>";
+                    echo "<input type='hidden' name='id_usuario' value='" . $resultado['id_usuario'] . "'>";
                     echo "<button type='submit' class='contactar-button'>Contactar</button>";
                     echo "</form>";
                     echo "</div>";

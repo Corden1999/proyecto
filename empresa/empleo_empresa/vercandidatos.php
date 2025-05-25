@@ -410,12 +410,7 @@ $nfilas = mysqli_num_rows($resultado);
                 echo "<button type='submit' class='contratar-button'>Contratar</button>";
                 echo "</form>";
                 
-                echo "<form action='contactar.php' method='POST' style='display: inline;'>";
-                echo "<input type='hidden' name='id_empleo' value='" . $id_empleo . "'>";
-                echo "<input type='hidden' name='id_candidato' value='" . $candidato['id_usuario'] . "'>";
-                echo "<input type='hidden' name='email_candidato' value='" . $candidato['email'] . "'>";
-                echo "<button type='submit' class='contactar-button'>Contactar</button>";
-                echo "</form>";
+                echo "<a href='../../sesiones/chatempresa.php?id_usuario=" . $candidato['id_usuario'] . "' class='contactar-button' style='display: inline-block; text-decoration: none;'>Contactar</a>";
                 echo "</div>";
                 
                 echo "</div>";

@@ -274,8 +274,8 @@ $resultado = mysqli_query($conexion, $sql)
         <div class="dropdown">
             <button onclick="location.href='../empresa/locales_empresa/locales/alquilarlocal.php'">Locales</button>
         </div>
-        <button onclick="location.href='../empresa/empleo_empresa/empleo/empleo.php'">Empleo</button>
-        <button onclick="location.href='../empresa/banca_empresa/banca/banca.php'">Banca</button>
+        <button onclick="location.href='../empresa/empleo_empresa/publicaroferta.php'">Empleo</button>
+        <button onclick="location.href='../empresa/banca_empresa/bancaindex.php'">Banca</button>
     </nav>
 
     <div class='welcome-container'>

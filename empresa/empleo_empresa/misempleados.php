@@ -138,7 +138,7 @@ $nfilas = mysqli_num_rows($resultado);
             margin: 20px;
             color: #ffffff;
             position: absolute;
-            top: 0px;
+            top: 20px;
             right: 10px;
             text-align: right;
             font-family: 'Helvetica', Arial, sans-serif;
@@ -274,9 +274,8 @@ $nfilas = mysqli_num_rows($resultado);
                             <td><?php echo htmlspecialchars($empleado['salario']); ?>€</td>
                             <td><?php echo date('d/m/Y', strtotime($empleado['fecha_contratacion'])); ?></td>
                             <td>
-                                <form action="contactar.php" method="POST" style="display: inline;">
-                                    <input type="hidden" name="id_empleado" value="<?php echo $empleado['id_empleado']; ?>">
-                                    <input type="hidden" name="email_empleado" value="<?php echo $empleado['email']; ?>">
+                                <form action="../../sesiones/chatempresa.php" method="GET" style="display: inline;">
+                                    <input type="hidden" name="id_usuario" value="<?php echo $empleado['id_usuario']; ?>">
                                     <button type="submit" class="contactar-button">Contactar</button>
                                 </form>
                             </td>

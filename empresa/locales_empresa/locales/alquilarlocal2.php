@@ -570,9 +570,8 @@ $resultado_trabajadores = mysqli_query($conexion, $consulta_trabajadores)
                     echo "<div class='trabajador-info'>" . nl2br(htmlspecialchars($trabajador['habilidades'])) . "</div>";
                     echo "</div>";
                     
-                    echo "<form action='contactar_trabajador.php' method='POST'>";
-                    echo "<input type='hidden' name='id_trabajador' value='" . $trabajador['id_usuario'] . "'>";
-                    echo "<input type='hidden' name='email_trabajador' value='" . $trabajador['email'] . "'>";
+                    echo "<form action='../../../sesiones/chatempresa.php' method='GET' style='display: inline;'>";
+                    echo "<input type='hidden' name='id_usuario' value='" . $trabajador['id_usuario'] . "'>";
                     echo "<button type='submit' class='contactar-trabajador-button'>Contactar</button>";
                     echo "</form>";
                     
